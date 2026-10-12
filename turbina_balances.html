@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turbina de vapor · Balances de masa, energía y entropía</title>
+<style>
+  * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
+  body {
+    background: #eceff1; margin: 0; padding: 16px;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh;
+  }
+  h1 { font-size: 22px; color: #0d47a1; margin: 0 0 4px 0; text-align: center; }
+  .sub { color: #546e7a; font-size: 13px; margin: 0 0 16px 0; }
+
+  .app-container {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    max-width: 1600px; width: 100%; justify-content: center;
+    align-items: flex-start;
+  }
+  .left-col {
+    display: flex; flex-direction: column; gap: 12px;
+    flex: 1 1 780px; min-width: 600px; max-width: 900px;
+  }
+  .canvas-wrapper {
+    position: relative; background: white; border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15); padding: 12px;
+  }
+  .canvas-inner {
+    position: relative; display: block; width: 100%; line-height: 0;
+  }
+  #turbinaImg {
+    display: block; width: 40%; height: auto;
+    user-select: none; border-radius: 6px;
+    background: #fafafa; margin: 0 auto;
+  }
+
+  .overlay {
+    position: absolute;
+    background: rgba(255, 251, 230, 0.97);
+    border: 2px solid #ffb74d;
+    border-radius: 8px;
+    padding: 6px 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    font-size: 11px; line-height: 1.35;
+    z-index: 10; width: 176px;
+  }
+  .overlay.c2 { background: rgba(232, 245, 233, 0.97); border-color: #66bb6a; }
+  .overlay .ttl {
+    font-weight: 700; font-size: 11px; color: #0d47a1;
+    margin-bottom: 4px; text-align: center;
+    border-bottom: 1px dashed #ffcc80; padding-bottom: 3px;
+  }
+  .overlay.c2 .ttl { color: #1b5e20; border-bottom-color: #a5d6a7; }
+  .overlay .fld {
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 4px; margin-bottom: 2px;
+  }
+  .overlay .fld label {
+    font-size: 10px; color: #37474f; font-weight: 600; white-space: nowrap;
+  }
+  .overlay .fld input {
+    width: 80px; padding: 2px 4px;
+    border: 1px solid #b0bec5; border-radius: 3px;
+    font-size: 10.5px; font-family: 'Consolas', monospace;
+    background: white; text-align: right;
+  }
+  .overlay .fld input:focus {
+    border-color: #1976d2; outline: none;
+    box-shadow: 0 0 0 2px rgba(25,118,210,0.2);
+  }
+  .overlay .fld input.calculado {
+    background: #c8e6c9 !important;
+    border-color: #2e7d32 !important;
+    color: #1b5e20; font-weight: 700;
+  }
+  .overlay .fase {
+    margin-top: 4px; font-size: 9.5px; font-style: italic;
+    color: #555; border-top: 1px dashed #ffcc80;
+    padding-top: 3px; text-align: center;
+  }
+  .overlay.c2 .fase { border-top-color: #a5d6a7; }
+
+  #panel1 { top: 0%;  left: 2%; }
+  #panel2 { bottom: -2%; left: 72%; }
+
+  .legend {
+    display: flex; gap: 16px; align-items: center;
+    font-size: 11.5px; color: #455a64;
+    padding: 6px 10px; background: #f5f5f5;
+    border-radius: 6px; margin-top: 8px; flex-wrap: wrap;
+  }
+  .legend .sw {
+    display: inline-block; width: 13px; height: 13px;
+    border-radius: 3px; border: 1px solid #90a4ae;
+    vertical-align: middle; margin-right: 5px;
+  }
+  .legend .sw.user { background: #fff; }
+  .legend .sw.calc { background: #c8e6c9; border-color: #2e7d32; }
+
+  .cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .right-col {
+    display: flex; flex-direction: column; gap: 12px;
+    flex: 1 1 360px; min-width: 320px; max-width: 460px;
+  }
+  .card {
+    background: white; border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 12px 14px;
+  }
+  .card h3 {
+    margin: 0 0 8px 0; font-size: 14px; color: #0d47a1;
+    border-bottom: 2px solid #e3f2fd; padding-bottom: 5px;
+  }
+  .card .row {
+    display: flex; flex-wrap: wrap; gap: 6px 10px;
+    align-items: center; margin-bottom: 6px;
+  }
+  .card .row label { font-size: 11.5px; color: #37474f; font-weight: 500; }
+  .card .row input, .card .row select {
+    padding: 4px 7px; border: 1px solid #b0bec5;
+    border-radius: 5px; font-size: 12px;
+    font-family: 'Consolas', monospace;
+  }
+  .card .row input.calculado {
+    background: #c8e6c9 !important;
+    border-color: #2e7d32 !important;
+    color: #1b5e20; font-weight: 700;
+  }
+  .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+  .btn {
+    padding: 7px 10px; border: none; border-radius: 7px;
+    font-weight: 600; font-size: 11.5px; cursor: pointer;
+    transition: 0.15s; flex: 1 1 auto; min-width: 90px;
+  }
+  .btn:hover { filter: brightness(0.93); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-masa     { background: #1976d2; color: white; }
+  .btn-energia  { background: #e65100; color: white; }
+  .btn-entropia { background: #6a1b9a; color: white; }
+  .btn-todos    { background: #1b5e20; color: white; }
+  .btn-sec      { background: #cfd8dc; color: #263238; }
+  .btn-ejemplo  { background: #ffb74d; color: #3e2723; }
+  .btn-limpiar  { background: #ef5350; color: white; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; transform: none; }
+
+  .resultados {
+    background: #fafafa; border: 1px solid #e0e0e0;
+    border-radius: 8px; padding: 10px 12px;
+    max-height: 480px; overflow-y: auto;
+    font-family: 'Consolas', monospace; font-size: 11.5px;
+    line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+  }
+  .tag-h   { font-weight: 700; color: #0d47a1; font-size: 12.5px; display: block; margin-top: 4px; }
+  .tag-res { font-weight: 700; color: #1b5e20; background: #e8f5e9; padding: 1px 4px; border-radius: 3px; }
+  .tag-warn{ color: #b71c1c; font-weight: 600; }
+  .tag-nota{ color: #e65100; }
+  .tag-sub { font-weight: 600; color: #37474f; margin-top: 4px; display: block; }
+
+  /* Banner de carga de Pyodide */
+  #pyodide-banner {
+    display: flex; align-items: center; gap: 10px;
+    background: #fff8e1; border: 2px solid #ffb74d;
+    color: #7c5a00; padding: 10px 16px; border-radius: 8px;
+    font-size: 12.5px; font-weight: 600;
+    margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    max-width: 700px; text-align: center;
+  }
+  #pyodide-banner.ready {
+    background: #e8f5e9; border-color: #66bb6a; color: #1b5e20;
+  }
+  #pyodide-banner.error {
+    background: #ffebee; border-color: #ef5350; color: #b71c1c;
+  }
+  .spinner {
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid #ffb74d; border-top-color: transparent;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 1100px) {
+    .app-container { flex-direction: column; }
+    .left-col, .right-col { max-width: none; min-width: 0; flex: 1 1 auto; }
+    .cards-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Turbina de vapor · Balances de masa, energía y entropía</h1>
+<p class="sub">Dr. Ronald F. Rodriguez Espinoza — Propiedades por IAPWS-IF97 (librería Python iapws)</p>
+
+<div id="pyodide-banner">
+  <span class="spinner"></span>
+  <span id="pyodide-msg">Cargando IAPWS-IF97 (puede tardar unos segundos la primera vez)…</span>
+</div>
+
+<div class="app-container">
+  <div class="left-col">
+    <div class="canvas-wrapper">
+      <div class="canvas-inner">
+        <img id="turbinaImg" src="Turbina.png" alt="Turbina de vapor">
+
+        <div class="overlay c1" id="panel1">
+          <div class="ttl">① ENTRADA</div>
+          <div class="fld"><label id="lbl_p1_P">P₁ [Pa]</label>   <input type="text" id="p1_P"></div>
+          <div class="fld"><label id="lbl_p1_T">T₁ [K]</label>    <input type="text" id="p1_T"></div>
+          <div class="fld"><label>x₁</label>        <input type="text" id="p1_x"></div>
+          <div class="fld"><label>Ṁ₁ [kg/s]</label> <input type="text" id="p1_m"></div>
+          <div class="fld"><label>Ĥ₁ [kJ/kg]</label><input type="text" id="p1_h"></div>
+          <div class="fld"><label>Ŝ₁</label>        <input type="text" id="p1_s"></div>
+          <div class="fld"><label>V̂₁</label>        <input type="text" id="p1_v"></div>
+          <div class="fld"><label>Û₁</label>        <input type="text" id="p1_u"></div>
+          <div class="fase" id="p1_fase">Fase: —</div>
+        </div>
+
+        <div class="overlay c2" id="panel2">
+          <div class="ttl">② SALIDA</div>
+          <div class="fld"><label id="lbl_p2_P">P₂ [Pa]</label>   <input type="text" id="p2_P"></div>
+          <div class="fld"><label id="lbl_p2_T">T₂ [K]</label>    <input type="text" id="p2_T"></div>
+          <div class="fld"><label>x₂</label>        <input type="text" id="p2_x"></div>
+          <div class="fld"><label>Ṁ₂ [kg/s]</label> <input type="text" id="p2_m"></div>
+          <div class="fld"><label>Ĥ₂ [kJ/kg]</label><input type="text" id="p2_h"></div>
+          <div class="fld"><label>Ŝ₂</label>        <input type="text" id="p2_s"></div>
+          <div class="fld"><label>V̂₂</label>        <input type="text" id="p2_v"></div>
+          <div class="fld"><label>Û₂</label>        <input type="text" id="p2_u"></div>
+          <div class="fase" id="p2_fase">Fase: —</div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span><span class="sw user"></span>Dato ingresado</span>
+        <span><span class="sw calc"></span>Valor calculado</span>
+        <span style="margin-left:auto; color:#78909c; font-size:10.5px;">
+          Imagen: <code>Turbina.png</code> (mismo directorio)
+        </span>
+      </div>
+    </div>
+
+    <div class="cards-row">
+      <div class="card">
+        <h3>⚙️ Unidades</h3>
+        <div class="row">
+          <label>Presión:</label>
+          <select id="uP">
+            <option value="Pa" selected>Pa</option>
+            <option value="kPa">kPa</option>
+            <option value="bar">bar</option>
+            <option value="MPa">MPa</option>
+          </select>
+        </div>
+        <div class="row">
+          <label>Temperatura:</label>
+          <select id="uT">
+            <option value="K" selected>K</option>
+            <option value="°C">°C</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📐 Parámetros opcionales</h3>
+        <div class="row">
+          <label>η [%]:</label><input type="text" id="f_eta" style="width:65px;">
+          <label id="lbl_f_T0">T₀ [K]:</label><input type="text" id="f_T0" value="298,15" style="width:65px;">
+        </div>
+        <div class="row">
+          <label>v₁ [m/s]:</label><input type="text" id="f_v1" style="width:60px;">
+          <label>v₂ [m/s]:</label><input type="text" id="f_v2" style="width:60px;">
+        </div>
+        <div class="row">
+          <label>z₁ [m]:</label><input type="text" id="f_z1" style="width:60px;">
+          <label>z₂ [m]:</label><input type="text" id="f_z2" style="width:60px;">
+        </div>
+        <div class="row">
+          <label>Q̇ [kW]:</label><input type="text" id="f_Q" style="width:100px;">
+        </div>
+        <div class="row">
+          <label>Ẇ [kW]:</label><input type="text" id="f_W" style="width:100px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="card">
+      <h3>🔘 Ejecutar balances</h3>
+      <div class="btn-group">
+        <button class="btn btn-masa"     onclick="ejecutarBalance('masa')">⚖️ Masa</button>
+        <button class="btn btn-energia"  onclick="ejecutarBalance('energia')">⚡ Energía</button>
+        <button class="btn btn-entropia" onclick="ejecutarBalance('entropia')">🌀 Entropía</button>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-todos" onclick="ejecutarTodos()">✅ Resolver los 3</button>
+        <button class="btn btn-sec"   onclick="completarEstado('p1')">🔄 Estado 1</button>
+        <button class="btn btn-sec"   onclick="completarEstado('p2')">🔄 Estado 2</button>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-limpiar" onclick="limpiarTodo()">🧹 Limpiar todo</button>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-ejemplo" onclick="cargarEjemplo(1)">📋 Ej. 1</button>
+        <button class="btn btn-ejemplo" onclick="cargarEjemplo(2)">📋 Ej. 2</button>
+        <button class="btn btn-ejemplo" onclick="cargarEjemplo(3)">📋 Ej. 3</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📊 Resultados</h3>
+      <div class="resultados" id="resultados">
+        <span style="color:#78909c;">Los resultados aparecerán aquí...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PYODIDE — Python + iapws en el navegador
+     ============================================================ -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<script>
+/* ============================================================
+   ESTADO GLOBAL
+   ============================================================ */
+var pyodide = null;
+var iapwsListo = false;
+var resultados = {};
+
+var P_UNITS = { Pa: 1e-6, kPa: 1e-3, bar: 0.1, MPa: 1.0 };
+var G = 9.81;
+var _uP_prev = 'Pa';
+var _uT_prev = 'K';
+
+function P_to_si(v, u) { return v * P_UNITS[u]; }
+function P_from_si(P, u) { return P / P_UNITS[u]; }
+function T_to_si(v, u) { return u === 'K' ? v : v + 273.15; }
+function T_from_si(T, u) { return u === 'K' ? T : T - 273.15; }
+
+function fmt(x, sig) {
+  sig = sig || 5;
+  if (x === null || x === undefined || isNaN(x)) return '—';
+  if (Math.abs(x) < 1e-12) return '0';
+  var d = sig - 1 - Math.floor(Math.log10(Math.abs(x)));
+  var s = x.toFixed(Math.max(0, Math.min(d, 9)));
+  return s.indexOf('.') >= 0 ? s.replace(/\.?0+$/, '') : s;
+}
+function n(x, sig) { return fmt(x, sig).replace('.', ','); }
+
+/* ============================================================
+   INICIALIZACIÓN DE PYODIDE + IAPWS
+   ============================================================ */
+async function initPyodide() {
+  try {
+    pyodide = await loadPyodide();
+
+    // Cargar micropip
+    await pyodide.loadPackage("micropip");
+    var micropip = pyodide.pyimport("micropip");
+
+    // Instalar iapws
+    document.getElementById('pyodide-msg').textContent =
+      "Descargando librería iapws…";
+    await micropip.install("iapws");
+
+    // Definir la función Python que se usará desde JS
+    await pyodide.runPythonAsync(`
+import json
+from iapws import IAPWS97
+
+def _fase(st):
+    if st.x is not None:
+        if st.x <= 1e-9: return 'Líquido saturado'
+        if st.x >= 1-1e-9: return 'Vapor saturado'
+        return 'Mezcla líquido-vapor'
+    if st.P >= 22.064:
+        return 'Fluido supercrítico' if st.T >= 647.096 else 'Líquido comprimido'
+    try:
+        sat = IAPWS97(P=st.P, x=0)
+        return 'Vapor sobrecalentado' if st.T > sat.T else 'Líquido comprimido'
+    except Exception:
+        return 'Vapor sobrecalentado'
+
+def calcular_estado(kwargs_json):
+    try:
+        kwargs = json.loads(kwargs_json)
+        # Convertir todos los valores a float
+        kwargs = {k: float(v) for k, v in kwargs.items()}
+        st = IAPWS97(**kwargs)
+        if getattr(st, 'status', 1) == 0 or st.h is None:
+            return json.dumps({'error': 'Estado fuera del rango de IAPWS-IF97'})
+        return json.dumps({
+            'ok': True,
+            'P': st.P, 'T': st.T, 'x': st.x,
+            'h': st.h, 's': st.s, 'v': st.v, 'u': st.u,
+            'fase': _fase(st)
+        })
+    except Exception as e:
+        return json.dumps({'error': str(e)})
+`);
+
+    iapwsListo = true;
+    var banner = document.getElementById('pyodide-banner');
+    banner.className = 'ready';
+    banner.innerHTML = '✅ IAPWS-IF97 listo (librería Python <code>iapws</code>). Ya puede calcular.';
+    console.log("IAPWS-IF97 cargado.");
+  } catch (e) {
+    console.error(e);
+    var banner = document.getElementById('pyodide-banner');
+    banner.className = 'error';
+    banner.innerHTML = '❌ Error al cargar IAPWS-IF97: ' + e.message +
+      '<br><small>Verifique su conexión a Internet (la primera carga requiere descargar Pyodide + iapws).</small>';
+  }
+}
+
+/* ============================================================
+   CÁLCULO DE ESTADO VÍA PYTHON
+   ============================================================ */
+async function calcularEstadoAPI(kwargs) {
+  if (!iapwsListo) throw new Error('IAPWS-IF97 aún se está cargando. Espere unos segundos.');
+  var jsonStr = JSON.stringify(kwargs);
+  var resultJson = await pyodide.runPythonAsync(
+    "calcular_estado(" + JSON.stringify(jsonStr) + ")"
+  );
+  var r = JSON.parse(resultJson);
+  if (r.error) throw new Error(r.error);
+  return r;
+}
+
+async function resolverEstado(d) {
+  var keys = Object.keys(d).filter(function(k) {
+    return d[k] !== null && d[k] !== undefined && d[k] !== '' && !isNaN(d[k]);
+  });
+  if (keys.length < 2) throw new Error('Ingrese 2 propiedades independientes');
+  if (keys.length > 2) throw new Error('Ingresó ' + keys.length + ' propiedades; deje solo 2');
+  var kwargs = {};
+  keys.forEach(function(k) { kwargs[k] = d[k]; });
+  return await calcularEstadoAPI(kwargs);
+}
+
+/* ============================================================
+   LECTURA DE PANELES
+   ============================================================ */
+function leerPanel(panelId, uP, uT) {
+  var d = {};
+  var keys = ['P','T','x','h','s','v','u'];
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i];
+    var el = document.getElementById(panelId + '_' + k);
+    if (!el) continue;
+    var val = el.value.trim().replace(',', '.');
+    if (val === '') continue;
+    var num = parseFloat(val);
+    if (isNaN(num)) throw new Error('Valor no numérico en ' + panelId + '_' + k);
+    if (k === 'P') { num = P_to_si(num, uP); if (num <= 0) throw new Error('P > 0'); }
+    else if (k === 'T') { num = T_to_si(num, uT); if (num <= 0) throw new Error('T > 0 K'); }
+    else if (k === 'x') { if (num < 0 || num > 1) throw new Error('x entre 0 y 1'); }
+    d[k] = num;
+  }
+  return d;
+}
+
+function leerDatos() {
+  var uP = document.getElementById('uP').value;
+  var uT = document.getElementById('uT').value;
+  var in1 = leerPanel('p1', uP, uT);
+  var in2 = leerPanel('p2', uP, uT);
+  var g = function(id) { var v = document.getElementById(id).value.trim(); return v === '' ? null : parseFloat(v.replace(',', '.')); };
+  var m1 = g('p1_m'), m2 = g('p2_m');
+  var W = g('f_W'), Q = g('f_Q');
+  var eta = g('f_eta');
+  if (eta !== null) { if (eta <= 0 || eta > 100) throw new Error('η entre 0 y 100 %'); eta /= 100; }
+  var T0v = g('f_T0');
+  var T0 = T0v !== null ? T_to_si(T0v, uT) : null;
+  var v1 = g('f_v1') || 0, v2 = g('f_v2') || 0, z1 = g('f_z1') || 0, z2 = g('f_z2') || 0;
+  return { in1: in1, in2: in2, m1: m1, m2: m2, W: W, Q: Q, eta: eta, T0: T0, v1: v1, v2: v2, z1: z1, z2: z2, uP: uP, uT: uT };
+}
+
+/* ============================================================
+   UI — unidades y limpieza
+   ============================================================ */
+function actualizarUnidades() {
+  var uP = document.getElementById('uP').value;
+  var uT = document.getElementById('uT').value;
+  document.getElementById('lbl_p1_P').textContent = 'P₁ [' + uP + ']';
+  document.getElementById('lbl_p2_P').textContent = 'P₂ [' + uP + ']';
+  document.getElementById('lbl_p1_T').textContent = 'T₁ [' + uT + ']';
+  document.getElementById('lbl_p2_T').textContent = 'T₂ [' + uT + ']';
+  document.getElementById('lbl_f_T0').textContent = 'T₀ [' + uT + ']:';
+}
+
+function convertirPresiones(nuevaU, viejaU) {
+  if (nuevaU === viejaU) return;
+  ['p1_P', 'p2_P'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var val = el.value.trim().replace(',', '.');
+    if (val === '') return;
+    var num = parseFloat(val);
+    if (isNaN(num)) return;
+    var enMPa = num * P_UNITS[viejaU];
+    el.value = fmt(enMPa / P_UNITS[nuevaU], 6).replace('.', ',');
+  });
+}
+function convertirTemperaturas(nuevaU, viejaU) {
+  if (nuevaU === viejaU) return;
+  ['p1_T', 'p2_T', 'f_T0'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var val = el.value.trim().replace(',', '.');
+    if (val === '') return;
+    var num = parseFloat(val);
+    if (isNaN(num)) return;
+    var enK = T_to_si(num, viejaU);
+    el.value = fmt(T_from_si(enK, nuevaU), 6).replace('.', ',');
+  });
+}
+
+function limpiarTodo() {
+  document.querySelectorAll('#panel1 input, #panel2 input').forEach(function(el) {
+    el.value = '';
+    el.classList.remove('calculado', 'error');
+  });
+  ['f_eta','f_v1','f_v2','f_z1','f_z2','f_Q','f_W'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.value = ''; el.classList.remove('calculado', 'error'); }
+  });
+  document.getElementById('uP').value = 'Pa';
+  document.getElementById('uT').value = 'K';
+  _uP_prev = 'Pa';
+  _uT_prev = 'K';
+  document.getElementById('f_T0').value = '298,15';
+  document.getElementById('p1_fase').textContent = 'Fase: —';
+  document.getElementById('p2_fase').textContent = 'Fase: —';
+  document.getElementById('resultados').innerHTML =
+    '<span style="color:#78909c;">Los resultados aparecerán aquí...</span>';
+  resultados = {};
+  actualizarUnidades();
+}
+
+/* ============================================================
+   CONTEXTO
+   ============================================================ */
+async function contexto(d) {
+  var notas = [], avisos = [];
+  var st1 = await resolverEstado(d.in1);
+  var m = d.m1 !== null ? d.m1 : d.m2;
+  if (d.m1 !== null && d.m2 !== null) {
+    if (Math.abs(d.m1 - d.m2) > 1e-6 * Math.max(d.m1, d.m2)) throw new Error('Ṁ₁ ≠ Ṁ₂');
+    m = d.m1;
+  }
+  var Q_in = d.Q, W_in = d.W;
+  var dec = (d.v1 * d.v1 - d.v2 * d.v2) / 2000.0;
+  var dep = G * (d.z1 - d.z2) / 1000.0;
+  var h1 = st1.h;
+
+  var st2 = null, P2 = null;
+  if (Object.keys(d.in2).length >= 2) { st2 = await resolverEstado(d.in2); P2 = st2.P; }
+  else if (d.in2.P !== undefined) P2 = d.in2.P;
+  else throw new Error('Corriente 2: ingrese al menos P₂');
+
+  var st2s = null;
+  try { st2s = await resolverEstado({ P: P2, s: st1.s }); } catch(e) {}
+
+  var modo = 'completo';
+  var Q = Q_in !== null ? Q_in : 0.0;
+
+  if (st2 === null) {
+    if (Q_in !== null && Q_in !== 0 && (d.eta !== null || W_in === null || m === null))
+      throw new Error('η solo aplica a turbina adiabática');
+    if (d.eta !== null) {
+      if (!st2s) throw new Error('No se pudo calcular estado isoentrópico');
+      modo = 'eta';
+      var h2 = h1 - d.eta * (h1 - st2s.h);
+      st2 = await resolverEstado({ P: P2, h: h2 });
+    } else if (W_in !== null && m !== null) {
+      modo = 'W';
+      var h2b = h1 + dec + dep + (Q - W_in) / m;
+      st2 = await resolverEstado({ P: P2, h: h2b });
+    } else {
+      if (!st2s) throw new Error('No se pudo calcular estado isoentrópico');
+      modo = 'isentropico';
+      st2 = st2s;
+      notas.push('Corriente 2: solo P₂ → se asumió expansión isoentrópica.');
+    }
+  } else {
+    if (d.eta !== null) notas.push('Se ignoró η: corriente 2 ya especificada.');
+    if (m !== null && W_in !== null && Q_in === null) modo = 'completo_calc_Q';
+    else if (m === null && W_in !== null && Q_in === null) modo = 'completo_calc_m';
+    else modo = 'completo';
+  }
+
+  var wesp = (h1 - st2.h) + dec + dep;
+  var m_calc = false, Q_calc = false;
+  var W = null;
+
+  if (modo === 'completo_calc_Q') {
+    Q = W_in - m * wesp; Q_calc = true; W = W_in;
+    notas.push('Con P₁,T₁,P₂,T₂,Ṁ,Ẇ se calculó Q̇ = Ẇ − Ṁ·w_esp.');
+  } else if (modo === 'completo_calc_m') {
+    if (Math.abs(wesp) < 1e-12) throw new Error('Δh = 0');
+    m = W_in / wesp; m_calc = true;
+    if (m <= 0) throw new Error('Ṁ ≤ 0');
+    Q = 0; W = W_in;
+    notas.push('Con P₁,T₁,P₂,T₂,Ẇ se asumió adiabático y Ṁ = Ẇ / w_esp.');
+  } else if (modo === 'completo') {
+    if (m !== null) W = Q + m * wesp;
+    else { if (Q !== 0) throw new Error('Con Q̇ ≠ 0 se necesita Ṁ'); }
+  } else if (modo === 'W') {
+    W = W_in;
+  } else if (modo === 'eta' || modo === 'isentropico') {
+    if (m === null && W_in !== null) {
+      if (Math.abs(wesp) < 1e-12) throw new Error('Δh = 0');
+      m = (W_in - Q) / wesp; m_calc = true;
+      if (m <= 0) throw new Error('Ṁ ≤ 0');
+    }
+    if (m !== null) W = W_in !== null ? W_in : Q + m * wesp;
+  }
+
+  var eta_c = null;
+  if (st2s) { var den = h1 - st2s.h; if (den > 1e-9) eta_c = (h1 - st2.h) / den; }
+
+  if (eta_c !== null && eta_c > 1 + 1e-6) avisos.push('η = ' + n(eta_c*100,4) + ' % > 100 %');
+  if (P2 >= st1.P) avisos.push('P₂ ≥ P₁: no es expansión.');
+  if (W !== null && W < 0) avisos.push('Ẇ < 0: consumiría trabajo.');
+  if (Q_calc && Q < 0) avisos.push('Q̇ = ' + n(Q) + ' kW < 0: cede calor.');
+
+  return { st1: st1, st2: st2, st2s: st2s, modo: modo, m: m, m_calc: m_calc,
+           Q: Q, Q_calc: Q_calc, W: W, wesp: wesp,
+           v1: d.v1, v2: d.v2, z1: d.z1, z2: d.z2,
+           eta_c: eta_c, notas: notas, avisos: avisos };
+}
+
+/* ============================================================
+   BALANCES
+   ============================================================ */
+async function generarBalanceMasa(d) {
+  var doc = [], avisos = [];
+  doc.push({ tag: 'h', txt: '═══ BALANCE DE MASA ═══' });
+  doc.push({ tag: '', txt: 'Sistema: Turbina, abierto, estacionario.' });
+  doc.push({ tag: '', txt: '' });
+  doc.push({ tag: '', txt: '(dM/dt)sist = 0 = Σ Ṁk' });
+  doc.push({ tag: '', txt: '0 = Ṁ₁ − Ṁ₂' });
+  var m = null;
+  if (d.m1 !== null && d.m2 !== null) {
+    if (Math.abs(d.m1 - d.m2) > 1e-6 * Math.max(d.m1, d.m2))
+      avisos.push('Ṁ₁ = ' + n(d.m1) + ' ≠ Ṁ₂ = ' + n(d.m2) + ' kg/s.');
+    else m = d.m1;
+  } else m = d.m1 !== null ? d.m1 : d.m2;
+  if (m !== null) {
+    doc.push({ tag: '', txt: 'Ṁ₁ = Ṁ₂ = Ṁ = ' + n(m) + ' kg/s   (1)' });
+    doc.push({ tag: 'res', txt: 'Resultado: Ṁ = ' + n(m) + ' kg/s' });
+  } else doc.push({ tag: '', txt: 'Ṁ₁ = Ṁ₂ = Ṁ   (1)' });
+  return { doc: doc, upd: m !== null ? { m: m } : {}, avisos: avisos, notas: [] };
+}
+
+async function generarBalanceEnergia(d) {
+  var c = await contexto(d);
+  var doc = [];
+  var st1 = c.st1, st2 = c.st2, st2s = c.st2s, m = c.m, Q = c.Q, W = c.W, modo = c.modo, wesp = c.wesp;
+  var v1 = c.v1, v2 = c.v2, z1 = c.z1, z2 = c.z2, notas = c.notas, avisos = c.avisos;
+  var h1 = st1.h, h2 = st2.h;
+  var has_q = Q !== 0, has_c = v1 !== 0 || v2 !== 0, has_p = z1 !== 0 || z2 !== 0;
+  var ec1 = v1*v1/2000, ec2 = v2*v2/2000;
+  var ep1 = G*z1/1000, ep2 = G*z2/1000;
+
+  doc.push({ tag: 'h', txt: '═══ BALANCE DE ENERGÍA ═══' });
+  doc.push({ tag: '', txt: 'Sistema: Turbina, abierto, ' + (Q===0?'adiabático':'con calor') + ', estacionario.' });
+  doc.push({ tag: '', txt: '' });
+  doc.push({ tag: '', txt: '(dU/dt)sist = 0 = Q̇ − Ẇ + Σ Ṁk (Ĥ + Ec + Ep)k' });
+  doc.push({ tag: '', txt: 'Ẇ = ' + (has_q?'Q̇ + ':'') + 'Ṁ (Ĥ₁ − Ĥ₂' + (has_c?' + Ec₁ − Ec₂':'') + (has_p?' + Ep₁ − Ep₂':'') + ')   (2)' });
+  doc.push({ tag: '', txt: '' });
+
+  doc.push({ tag: 'sub', txt: 'Propiedades (IAPWS-IF97):' });
+  doc.push({ tag: '', txt: '  ① Entrada: ' + st1.fase });
+  doc.push({ tag: '', txt: '    P₁ = ' + n(P_from_si(st1.P, d.uP)) + ' ' + d.uP + '   T₁ = ' + n(T_from_si(st1.T, d.uT)) + ' ' + d.uT });
+  if (st1.x !== null) doc.push({ tag: '', txt: '    x₁ = ' + n(st1.x) });
+  doc.push({ tag: '', txt: '    Ĥ₁ = ' + n(st1.h) + ' kJ/kg   Ŝ₁ = ' + n(st1.s) + ' kJ/(kg·K)' });
+  doc.push({ tag: '', txt: '    V̂₁ = ' + n(st1.v) + ' m³/kg  Û₁ = ' + n(st1.u) + ' kJ/kg' });
+
+  if ((modo === 'eta' || modo === 'isentropico') && st2s) {
+    doc.push({ tag: '', txt: '  ②s Isoentrópico:' });
+    doc.push({ tag: '', txt: '    P₂s = ' + n(P_from_si(st2s.P, d.uP)) + ' ' + d.uP + '   T₂s = ' + n(T_from_si(st2s.T, d.uT)) + ' ' + d.uT });
+    doc.push({ tag: '', txt: '    Ĥ₂s = ' + n(st2s.h) + ' kJ/kg  Ŝ₂s = ' + n(st2s.s) + ' kJ/(kg·K)' });
+    if (st2s.x !== null && st2s.x > 1e-9 && st2s.x < 1-1e-9)
+      doc.push({ tag: '', txt: '    x₂s = ' + n(st2s.x, 4) });
+  }
+  if (modo === 'eta') {
+    doc.push({ tag: '', txt: '' });
+    doc.push({ tag: 'sub', txt: 'Eficiencia isoentrópica:' });
+    doc.push({ tag: '', txt: 'η = (Ĥ₁ − Ĥ₂) / (Ĥ₁ − Ĥ₂s) = ' + n(d.eta,4) });
+    doc.push({ tag: '', txt: 'Ĥ₂ = ' + n(h1) + ' − ' + n(d.eta,4) + '·(' + n(h1) + ' − ' + n(st2s.h) + ') = ' + n(h2) + ' kJ/kg' });
+  }
+  if (modo === 'W') {
+    doc.push({ tag: 'sub', txt: 'Entalpía de salida desde Ẇ:' });
+    doc.push({ tag: '', txt: 'Ĥ₂ = ' + n(h2) + ' kJ/kg' });
+  }
+
+  doc.push({ tag: '', txt: '  ② Salida' + (modo==='eta'?' real':'') + ': ' + st2.fase });
+  doc.push({ tag: '', txt: '    P₂ = ' + n(P_from_si(st2.P, d.uP)) + ' ' + d.uP + '   T₂ = ' + n(T_from_si(st2.T, d.uT)) + ' ' + d.uT });
+  if (st2.x !== null) doc.push({ tag: '', txt: '    x₂ = ' + n(st2.x) });
+  doc.push({ tag: '', txt: '    Ĥ₂ = ' + n(st2.h) + ' kJ/kg   Ŝ₂ = ' + n(st2.s) + ' kJ/(kg·K)' });
+  doc.push({ tag: '', txt: '    V̂₂ = ' + n(st2.v) + ' m³/kg  Û₂ = ' + n(st2.u) + ' kJ/kg' });
+
+  doc.push({ tag: '', txt: '' });
+  var inner = n(h1) + ' − ' + n(h2) + (has_c?' + ' + n(ec1,6) + ' − ' + n(ec2,6):'') + (has_p?' + ' + n(ep1,6) + ' − ' + n(ep2,6):'');
+  if (c.Q_calc) {
+    doc.push({ tag: 'sub', txt: 'Calor del balance (despejando Q̇):' });
+    doc.push({ tag: '', txt: 'Q̇ = Ẇ − Ṁ·(' + inner + ') = ' + n(W) + ' − ' + n(m) + '·' + n(wesp) + ' = ' + n(Q) + ' kW' });
+    doc.push({ tag: 'res', txt: 'Resultado: Q̇ = ' + n(Q) + ' kW' });
+    if (Q < 0) doc.push({ tag: 'nota', txt: 'ⓘ Cede ' + n(Math.abs(Q)) + ' kW de calor al entorno.' });
+  } else if (c.m_calc) {
+    doc.push({ tag: 'sub', txt: 'Flujo másico despejado:' });
+    doc.push({ tag: '', txt: 'Ṁ = (Ẇ − Q̇)/(' + inner + ') = ' + n(m) + ' kg/s' });
+    doc.push({ tag: 'res', txt: 'Resultado: Ṁ = ' + n(m) + ' kg/s' });
+  } else if (m === null) {
+    doc.push({ tag: 'sub', txt: 'Trabajo específico:' });
+    doc.push({ tag: '', txt: 'Ẇ/Ṁ = ' + inner + ' = ' + n(wesp) + ' kJ/kg' });
+    doc.push({ tag: 'res', txt: 'Resultado: Ẇ/Ṁ = ' + n(wesp) + ' kJ/kg' });
+  } else {
+    doc.push({ tag: 'sub', txt: 'Reemplazando:' });
+    doc.push({ tag: '', txt: 'Ẇ = ' + (has_q?n(Q) + ' + ':'') + '(' + n(m) + ' kg/s)·(' + inner + ') kJ/kg = ' + n(W) + ' kW' });
+    doc.push({ tag: 'res', txt: 'Resultado: Ẇ = ' + n(W) + ' kW' });
+  }
+
+  var upd = { st1: st1, st2: st2, m: m, W: W };
+  if (c.Q_calc) upd.Q = c.Q;
+  if (c.eta_c !== null) upd.eta = c.eta_c;
+  return { doc: doc, upd: upd, avisos: avisos, notas: notas };
+}
+
+async function generarBalanceEntropia(d) {
+  var c = await contexto(d);
+  var doc = [];
+  var st1 = c.st1, st2 = c.st2, st2s = c.st2s, m = c.m, Q = c.Q, modo = c.modo, notas = c.notas, avisos = c.avisos;
+  var s1 = st1.s, s2 = st2.s;
+  var has_q = Q !== 0;
+  var T0 = d.T0;
+  if (has_q) {
+    if (!T0 || T0 <= 0) throw new Error('Con Q̇ ≠ 0 ingrese T₀');
+    if (!m) throw new Error('Con Q̇ ≠ 0 se necesita Ṁ (o Ẇ)');
+  }
+  var sgen_esp = (s2 - s1) - (has_q ? Q/(m*T0) : 0);
+  var Sgen = m !== null ? (m*(s2-s1) - (has_q ? Q/T0 : 0)) : null;
+
+  doc.push({ tag: 'h', txt: '═══ BALANCE DE ENTROPÍA ═══' });
+  doc.push({ tag: '', txt: 'Sistema: Turbina, abierto, ' + (Q===0?'adiabático':'con calor') + ', estacionario.' });
+  doc.push({ tag: '', txt: '' });
+
+  if (modo === 'isentropico') {
+    doc.push({ tag: '', txt: '(dS/dt)sist = 0 = Σ(Ṁ Ŝ)k + Q̇/T₀ + Ṡgen' });
+    doc.push({ tag: '', txt: '0 = Ṁ₁ Ŝ₁ − Ṁ₂ Ŝ₂   →   Ŝ₁ = Ŝ₂   (3)' });
+  } else {
+    doc.push({ tag: '', txt: '(dS/dt)sist = 0 = Σ(Ṁ Ŝ)k + Q̇/T₀ + Ṡgen' });
+    doc.push({ tag: '', txt: '0 = Ṁ₁ Ŝ₁ − Ṁ₂ Ŝ₂' + (has_q?' + Q̇/T₀':'') + ' + Ṡgen' });
+    doc.push({ tag: '', txt: 'Ŝgen = Ŝ₂ − Ŝ₁' + (has_q?' − Q̇/(Ṁ T₀)':'') + '   (3)' });
+  }
+
+  doc.push({ tag: '', txt: '' });
+  doc.push({ tag: 'sub', txt: 'Propiedades:' });
+  doc.push({ tag: '', txt: '  ① Entrada: Ŝ₁ = ' + n(s1) + ' kJ/(kg·K)' });
+  if (modo === 'eta' && st2s) doc.push({ tag: '', txt: '  ②s Isoentrópico: Ŝ₂s = ' + n(st2s.s) + ' kJ/(kg·K)' });
+  doc.push({ tag: '', txt: '  ② Salida' + (modo==='eta'?' real':'') + ': Ŝ₂ = ' + n(s2) + ' kJ/(kg·K)' });
+  doc.push({ tag: '', txt: '' });
+  var q_t = has_q ? ' − (' + n(Q) + ' kW)/(' + n(m) + '·' + n(T0) + ')' : '';
+  doc.push({ tag: 'sub', txt: 'Reemplazando en (3):' });
+  doc.push({ tag: '', txt: 'Ŝgen = ' + n(s2) + ' − ' + n(s1) + q_t + ' = ' + n(sgen_esp,5) + ' kJ/(kg·K)' });
+  if (Sgen !== null) doc.push({ tag: '', txt: 'Ṡgen = Ṁ·Ŝgen = ' + n(Sgen) + ' kW/K' });
+
+  var upd = { st1: st1, st2: st2, m: m, W: c.W };
+  if (c.Q_calc) upd.Q = c.Q;
+  if (c.eta_c !== null) upd.eta = c.eta_c;
+  return { doc: doc, upd: upd, avisos: avisos, notas: notas };
+}
+
+/* ============================================================
+   MOSTRAR RESULTADOS
+   ============================================================ */
+function mostrarResultados(lista) {
+  var cont = document.getElementById('resultados');
+  cont.innerHTML = '';
+  for (var i = 0; i < lista.length; i++) {
+    if (i > 0) {
+      var hr = document.createElement('div');
+      hr.style.borderTop = '2px dashed #b0bec5';
+      hr.style.margin = '8px 0';
+      cont.appendChild(hr);
+    }
+    var res = lista[i];
+    for (var k = 0; k < res.doc.length; k++) {
+      var it = res.doc[k];
+      var sp = document.createElement('div');
+      sp.textContent = it.txt;
+      if (it.tag === 'h') sp.className = 'tag-h';
+      else if (it.tag === 'res') sp.className = 'tag-res';
+      else if (it.tag === 'sub') sp.className = 'tag-sub';
+      else if (it.tag === 'nota') sp.className = 'tag-nota';
+      else if (it.tag === 'warn') sp.className = 'tag-warn';
+      sp.style.whiteSpace = 'pre-wrap';
+      cont.appendChild(sp);
+    }
+    var notas = res.notas || [];
+    for (var j = 0; j < notas.length; j++) {
+      var sp2 = document.createElement('div');
+      sp2.textContent = 'ⓘ ' + notas[j]; sp2.className = 'tag-nota';
+      cont.appendChild(sp2);
+    }
+    var avisos = res.avisos || [];
+    for (var j2 = 0; j2 < avisos.length; j2++) {
+      var sp3 = document.createElement('div');
+      sp3.textContent = '⚠ ' + avisos[j2]; sp3.className = 'tag-warn';
+      cont.appendChild(sp3);
+    }
+  }
+  cont.scrollTop = 0;
+}
+
+function mostrarError(msg) {
+  var cont = document.getElementById('resultados');
+  var sp = document.createElement('div');
+  sp.textContent = '✖ ' + msg; sp.className = 'tag-warn';
+  sp.style.marginTop = '8px';
+  cont.appendChild(sp);
+  cont.scrollTop = cont.scrollHeight;
+}
+
+function limpiarCalculados() {
+  document.querySelectorAll('input.calculado').forEach(function(el) {
+    el.value = ''; el.classList.remove('calculado');
+  });
+  document.getElementById('p1_fase').textContent = 'Fase: —';
+  document.getElementById('p2_fase').textContent = 'Fase: —';
+}
+
+function aplicarResultados(upd) {
+  var uP = document.getElementById('uP').value, uT = document.getElementById('uT').value;
+  if (upd.st1) escribirPanel('p1', upd.st1, uP, uT);
+  if (upd.st2) escribirPanel('p2', upd.st2, uP, uT);
+  if (upd.m != null) ['p1_m','p2_m'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && !el.value.trim()) { el.value = fmt(upd.m,6).replace('.',','); el.classList.add('calculado'); }
+  });
+  if (upd.W != null) {
+    var elW = document.getElementById('f_W');
+    if (elW && !elW.value.trim()) { elW.value = fmt(upd.W,6).replace('.',','); elW.classList.add('calculado'); }
+  }
+  if (upd.Q != null) {
+    var elQ = document.getElementById('f_Q');
+    if (elQ && !elQ.value.trim()) { elQ.value = fmt(upd.Q,6).replace('.',','); elQ.classList.add('calculado'); }
+  }
+  if (upd.eta != null) {
+    var elE = document.getElementById('f_eta');
+    if (elE && !elE.value.trim()) { elE.value = fmt(upd.eta*100,6).replace('.',','); elE.classList.add('calculado'); }
+  }
+}
+
+function escribirPanel(panelId, st, uP, uT) {
+  var conv = { P: P_from_si(st.P,uP), T: T_from_si(st.T,uT), x: st.x, h: st.h, s: st.s, v: st.v, u: st.u };
+  for (var k in conv) {
+    if (!conv.hasOwnProperty(k)) continue;
+    var el = document.getElementById(panelId + '_' + k);
+    if (!el) continue;
+    if (el.value.trim() !== '' && !el.classList.contains('calculado')) continue;
+    var val = conv[k];
+    if (val === null || val === undefined) { el.value = ''; el.classList.remove('calculado'); }
+    else { el.value = fmt(val,6).replace('.',','); el.classList.add('calculado'); }
+  }
+  document.getElementById(panelId + '_fase').textContent = 'Fase: ' + st.fase;
+}
+
+async function completarEstado(panelId) {
+  try {
+    var uP = document.getElementById('uP').value, uT = document.getElementById('uT').value;
+    var d = leerPanel(panelId, uP, uT);
+    if (Object.keys(d).length < 2) throw new Error('Ingrese 2 propiedades');
+    var st = await resolverEstado(d);
+    escribirPanel(panelId, st, uP, uT);
+  } catch (e) { mostrarError(e.message); }
+}
+
+async function ejecutarBalance(tipo) {
+  limpiarCalculados();
+  document.getElementById('resultados').innerHTML = '';
+  try {
+    var d = leerDatos();
+    var res;
+    if (tipo === 'masa') res = await generarBalanceMasa(d);
+    else if (tipo === 'energia') res = await generarBalanceEnergia(d);
+    else if (tipo === 'entropia') res = await generarBalanceEntropia(d);
+    aplicarResultados(res.upd);
+    resultados[tipo] = res;
+    mostrarResultados([res]);
+  } catch (e) { mostrarError(e.message); }
+}
+
+async function ejecutarTodos() {
+  limpiarCalculados();
+  document.getElementById('resultados').innerHTML = '';
+  var lista = [];
+  try {
+    var d = leerDatos();
+    lista.push(await generarBalanceMasa(d));
+    lista.push(await generarBalanceEnergia(d));
+    lista.push(await generarBalanceEntropia(d));
+    // Aplicar actualizaciones del último cálculo (energía)
+    lista.forEach(function(res) { aplicarResultados(res.upd); });
+    mostrarResultados(lista);
+  } catch (e) { mostrarError(e.message); if (lista.length) mostrarResultados(lista); }
+}
+
+function cargarEjemplo(n) {
+  limpiarTodo();
+  document.getElementById('uP').value = 'Pa';
+  document.getElementById('uT').value = 'K';
+  _uP_prev = 'Pa'; _uT_prev = 'K';
+  actualizarUnidades();
+  if (n === 1) {
+    document.getElementById('p1_P').value = '6000000';
+    document.getElementById('p1_T').value = '773,15';
+    document.getElementById('p1_m').value = '10';
+    document.getElementById('p2_P').value = '10000';
+    document.getElementById('f_eta').value = '85';
+    document.getElementById('resultados').innerHTML =
+      '<span style="color:#37474f;">Ejemplo 1: 6 MPa, 773,15 K, 10 kg/s, salida 10 kPa, η = 85 %.<br>Pulse «Resolver los 3».</span>';
+  } else if (n === 2) {
+    document.getElementById('p1_P').value = '4000000';
+    document.getElementById('p1_T').value = '723,15';
+    document.getElementById('p1_m').value = '5';
+    document.getElementById('p2_P').value = '20000';
+    document.getElementById('resultados').innerHTML =
+      '<span style="color:#37474f;">Ejemplo 2: 4 MPa, 723,15 K, 5 kg/s, salida 20 kPa, isoentrópica.<br>Pulse «Resolver los 3».</span>';
+  } else if (n === 3) {
+    document.getElementById('p1_P').value = '8000000';
+    document.getElementById('p1_T').value = '823,15';
+    document.getElementById('p1_m').value = '20';
+    document.getElementById('p2_P').value = '50000';
+    document.getElementById('p2_T').value = '400';
+    document.getElementById('f_W').value = '9000';
+    document.getElementById('resultados').innerHTML =
+      '<span style="color:#37474f;">Ejemplo 3: 8 MPa, 823,15 K, 20 kg/s, salida 50 kPa y 400 K, Ẇ = 9000 kW.<br>Se calculará Q̇ del balance.<br>Pulse «Resolver los 3».</span>';
+  }
+}
+
+/* ============================================================
+   LISTENERS
+   ============================================================ */
+document.getElementById('uP').addEventListener('change', function() {
+  var nueva = this.value;
+  convertirPresiones(nueva, _uP_prev);
+  _uP_prev = nueva;
+  actualizarUnidades();
+});
+document.getElementById('uT').addEventListener('change', function() {
+  var nueva = this.value;
+  convertirTemperaturas(nueva, _uT_prev);
+  _uT_prev = nueva;
+  actualizarUnidades();
+});
+
+/* ============================================================
+   INICIO
+   ============================================================ */
+window.addEventListener('load', function() {
+  limpiarTodo();
+  actualizarUnidades();
+  initPyodide();
+});
+</script>
+</body>
+</html>
