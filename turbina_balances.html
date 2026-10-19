@@ -12,7 +12,7 @@
     min-height: 100vh;
   }
   h1 { font-size: 22px; color: #0d47a1; margin: 0 0 4px 0; text-align: center; }
-  .sub { color: #546e7a; font-size: 13px; margin: 0 0 16px 0; }
+  .sub { color: #546e7a; font-size: 13px; margin: 0 0 16px 0; text-align:center; }
 
   .app-container {
     display: flex; flex-wrap: wrap; gap: 16px;
@@ -27,9 +27,7 @@
     position: relative; background: white; border-radius: 12px;
     box-shadow: 0 4px 14px rgba(0,0,0,0.15); padding: 12px;
   }
-  .canvas-inner {
-    position: relative; display: block; width: 100%; line-height: 0;
-  }
+  .canvas-inner { position: relative; display: block; width: 100%; line-height: 0; }
   #turbinaImg {
     display: block; width: 40%; height: auto;
     user-select: none; border-radius: 6px;
@@ -40,8 +38,7 @@
     position: absolute;
     background: rgba(255, 251, 230, 0.97);
     border: 2px solid #ffb74d;
-    border-radius: 8px;
-    padding: 6px 8px;
+    border-radius: 8px; padding: 6px 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     font-size: 11px; line-height: 1.35;
     z-index: 10; width: 176px;
@@ -53,36 +50,26 @@
     border-bottom: 1px dashed #ffcc80; padding-bottom: 3px;
   }
   .overlay.c2 .ttl { color: #1b5e20; border-bottom-color: #a5d6a7; }
-  .overlay .fld {
-    display: flex; align-items: center;
-    justify-content: space-between; gap: 4px; margin-bottom: 2px;
-  }
-  .overlay .fld label {
-    font-size: 10px; color: #37474f; font-weight: 600; white-space: nowrap;
-  }
+  .overlay .fld { display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-bottom: 2px; }
+  .overlay .fld label { font-size: 10px; color: #37474f; font-weight: 600; white-space: nowrap; }
   .overlay .fld input {
     width: 80px; padding: 2px 4px;
     border: 1px solid #b0bec5; border-radius: 3px;
     font-size: 10.5px; font-family: 'Consolas', monospace;
     background: white; text-align: right;
   }
-  .overlay .fld input:focus {
-    border-color: #1976d2; outline: none;
-    box-shadow: 0 0 0 2px rgba(25,118,210,0.2);
-  }
+  .overlay .fld input:focus { border-color: #1976d2; outline: none; box-shadow: 0 0 0 2px rgba(25,118,210,0.2); }
   .overlay .fld input.calculado {
-    background: #c8e6c9 !important;
-    border-color: #2e7d32 !important;
+    background: #c8e6c9 !important; border-color: #2e7d32 !important;
     color: #1b5e20; font-weight: 700;
   }
   .overlay .fase {
-    margin-top: 4px; font-size: 9.5px; font-style: italic;
-    color: #555; border-top: 1px dashed #ffcc80;
-    padding-top: 3px; text-align: center;
+    margin-top: 4px; font-size: 9.5px; font-style: italic; color: #555;
+    border-top: 1px dashed #ffcc80; padding-top: 3px; text-align: center;
   }
   .overlay.c2 .fase { border-top-color: #a5d6a7; }
 
-  #panel1 { top: 0%;  left: 2%; }
+  #panel1 { top: 0%; left: 2%; }
   #panel2 { bottom: -2%; left: 72%; }
 
   .legend {
@@ -114,10 +101,7 @@
     margin: 0 0 8px 0; font-size: 14px; color: #0d47a1;
     border-bottom: 2px solid #e3f2fd; padding-bottom: 5px;
   }
-  .card .row {
-    display: flex; flex-wrap: wrap; gap: 6px 10px;
-    align-items: center; margin-bottom: 6px;
-  }
+  .card .row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-bottom: 6px; }
   .card .row label { font-size: 11.5px; color: #37474f; font-weight: 500; }
   .card .row input, .card .row select {
     padding: 4px 7px; border: 1px solid #b0bec5;
@@ -125,8 +109,7 @@
     font-family: 'Consolas', monospace;
   }
   .card .row input.calculado {
-    background: #c8e6c9 !important;
-    border-color: #2e7d32 !important;
+    background: #c8e6c9 !important; border-color: #2e7d32 !important;
     color: #1b5e20; font-weight: 700;
   }
   .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
@@ -144,6 +127,8 @@
   .btn-sec      { background: #cfd8dc; color: #263238; }
   .btn-ejemplo  { background: #ffb74d; color: #3e2723; }
   .btn-limpiar  { background: #ef5350; color: white; }
+  .btn-diag     { background: #00838f; color: white; }
+  .btn-down     { background: #455a64; color: white; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; transform: none; }
 
   .resultados {
@@ -159,7 +144,6 @@
   .tag-nota{ color: #e65100; }
   .tag-sub { font-weight: 600; color: #37474f; margin-top: 4px; display: block; }
 
-  /* Banner de carga de Pyodide */
   #pyodide-banner {
     display: flex; align-items: center; gap: 10px;
     background: #fff8e1; border: 2px solid #ffb74d;
@@ -168,18 +152,79 @@
     margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     max-width: 700px; text-align: center;
   }
-  #pyodide-banner.ready {
-    background: #e8f5e9; border-color: #66bb6a; color: #1b5e20;
-  }
-  #pyodide-banner.error {
-    background: #ffebee; border-color: #ef5350; color: #b71c1c;
-  }
+  #pyodide-banner.ready { background: #e8f5e9; border-color: #66bb6a; color: #1b5e20; }
+  #pyodide-banner.error { background: #ffebee; border-color: #ef5350; color: #b71c1c; }
   .spinner {
     display: inline-block; width: 14px; height: 14px;
     border: 2px solid #ffb74d; border-top-color: transparent;
     border-radius: 50%; animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== DIAGRAMAS ===== */
+  .diagramas-section { max-width: 1600px; width: 100%; margin-top: 24px; }
+  .diagramas-header {
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .diagramas-header h2 { margin: 0; font-size: 18px; color: #0d47a1; }
+  .diagramas-header .hint { font-size: 12px; color: #607d8b; }
+  .diagramas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 1000px) { .diagramas-grid { grid-template-columns: 1fr; } }
+  .diag-card {
+    background: white; border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    padding: 12px 14px;
+    display: flex; flex-direction: column;
+  }
+  .diag-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; margin-bottom: 8px;
+  }
+  .diag-card-head h3 {
+    margin: 0; font-size: 14px; color: #0d47a1;
+    display:flex; align-items:center; gap:6px;
+  }
+  .diag-dl {
+    background: #455a64; color: #fff; border: none;
+    border-radius: 6px; padding: 4px 9px;
+    font-size: 10.5px; font-weight: 600; cursor: pointer;
+    transition: 0.15s; white-space: nowrap;
+  }
+  .diag-dl:hover { filter: brightness(1.15); }
+  .diag-dl:active { transform: translateY(1px); }
+
+  .diag-canvas-wrap { position: relative; width: 100%; }
+  .diag-canvas {
+    display: block; width: 100%; height: auto;
+    background: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #cfd8dc;
+  }
+  .diag-leyenda {
+    display: flex; flex-wrap: wrap; gap: 4px 12px;
+    margin-top: 8px; padding: 6px 8px;
+    background: #f5f7f9; border-radius: 6px;
+    border: 1px solid #e1e7eb;
+    font-size: 10px; color: #37474f; line-height: 1.3;
+  }
+  .diag-leyenda .item {
+    display: inline-flex; align-items: center; gap: 4px;
+    white-space: nowrap;
+  }
+  .diag-leyenda .sw-linea {
+    display: inline-block; width: 16px; height: 2px;
+    border-radius: 2px;
+  }
+  .diag-leyenda .sw-linea.dash {
+    height: 0; border-top: 2px dashed;
+    background: transparent !important;
+  }
+  .diag-leyenda .sw-punto {
+    display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+  }
 
   @media (max-width: 1100px) {
     .app-container { flex-direction: column; }
@@ -318,6 +363,56 @@
 </div>
 
 <!-- ============================================================
+     DIAGRAMAS TERMODINÁMICOS
+     ============================================================ -->
+<div class="diagramas-section">
+  <div class="diagramas-header">
+    <h2>📈 Diagramas termodinámicos</h2>
+    <span class="hint">Se actualizan al resolver un balance o con «Dibujar diagramas».</span>
+    <button class="btn btn-diag" style="flex:0 0 auto; min-width:130px;" onclick="dibujarTodosLosDiagramas()">🔄 Dibujar diagramas</button>
+    <button class="btn btn-down" style="flex:0 0 auto; min-width:160px;" onclick="descargarTodosLosDiagramas()">⬇️ Descargar todos</button>
+  </div>
+
+  <div class="diagramas-grid">
+    <div class="diag-card">
+      <div class="diag-card-head">
+        <h3>🌡️ Diagrama T–Ŝ</h3>
+        <button class="diag-dl" onclick="descargarDiagrama('cvTs','diagrama_T-s')">⬇️ PNG</button>
+      </div>
+      <div class="diag-canvas-wrap"><canvas id="cvTs" class="diag-canvas"></canvas></div>
+      <div class="diag-leyenda" id="leyTs"></div>
+    </div>
+
+    <div class="diag-card">
+      <div class="diag-card-head">
+        <h3>📐 Diagrama Ĥ–Ŝ (Mollier)</h3>
+        <button class="diag-dl" onclick="descargarDiagrama('cvHs','diagrama_h-s')">⬇️ PNG</button>
+      </div>
+      <div class="diag-canvas-wrap"><canvas id="cvHs" class="diag-canvas"></canvas></div>
+      <div class="diag-leyenda" id="leyHs"></div>
+    </div>
+
+    <div class="diag-card">
+      <div class="diag-card-head">
+        <h3>💠 Diagrama P–Ĥ</h3>
+        <button class="diag-dl" onclick="descargarDiagrama('cvPh','diagrama_P-h')">⬇️ PNG</button>
+      </div>
+      <div class="diag-canvas-wrap"><canvas id="cvPh" class="diag-canvas"></canvas></div>
+      <div class="diag-leyenda" id="leyPh"></div>
+    </div>
+
+    <div class="diag-card">
+      <div class="diag-card-head">
+        <h3>💧 Diagrama P–V̂</h3>
+        <button class="diag-dl" onclick="descargarDiagrama('cvPv','diagrama_P-v')">⬇️ PNG</button>
+      </div>
+      <div class="diag-canvas-wrap"><canvas id="cvPv" class="diag-canvas"></canvas></div>
+      <div class="diag-leyenda" id="leyPv"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
      PYODIDE — Python + iapws en el navegador
      ============================================================ -->
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
@@ -328,6 +423,8 @@
 var pyodide = null;
 var iapwsListo = false;
 var resultados = {};
+var SAT = null;
+var ultimoContexto = null;
 
 var P_UNITS = { Pa: 1e-6, kPa: 1e-3, bar: 0.1, MPa: 1.0 };
 var G = 9.81;
@@ -355,17 +452,12 @@ function n(x, sig) { return fmt(x, sig).replace('.', ','); }
 async function initPyodide() {
   try {
     pyodide = await loadPyodide();
-
-    // Cargar micropip
     await pyodide.loadPackage("micropip");
     var micropip = pyodide.pyimport("micropip");
 
-    // Instalar iapws
-    document.getElementById('pyodide-msg').textContent =
-      "Descargando librería iapws…";
+    document.getElementById('pyodide-msg').textContent = "Descargando librería iapws…";
     await micropip.install("iapws");
 
-    // Definir la función Python que se usará desde JS
     await pyodide.runPythonAsync(`
 import json
 from iapws import IAPWS97
@@ -386,7 +478,6 @@ def _fase(st):
 def calcular_estado(kwargs_json):
     try:
         kwargs = json.loads(kwargs_json)
-        # Convertir todos los valores a float
         kwargs = {k: float(v) for k, v in kwargs.items()}
         st = IAPWS97(**kwargs)
         if getattr(st, 'status', 1) == 0 or st.h is None:
@@ -399,12 +490,43 @@ def calcular_estado(kwargs_json):
         })
     except Exception as e:
         return json.dumps({'error': str(e)})
+
+def curva_saturacion():
+    import numpy as np
+    Ts, Ps, ss_l, ss_v, hs_l, hs_v, vs_l, vs_v = [], [], [], [], [], [], [], []
+    for P in np.logspace(np.log10(0.001), np.log10(22.064), 200):
+        try:
+            l = IAPWS97(P=float(P), x=0)
+            v = IAPWS97(P=float(P), x=1)
+            Ts.append(l.T); Ps.append(float(P))
+            ss_l.append(l.s); ss_v.append(v.s)
+            hs_l.append(l.h); hs_v.append(v.h)
+            vs_l.append(l.v); vs_v.append(v.v)
+        except Exception:
+            pass
+    return json.dumps({
+        'T': Ts, 'P': Ps,
+        's_l': ss_l, 's_v': ss_v,
+        'h_l': hs_l, 'h_v': hs_v,
+        'v_l': vs_l, 'v_v': vs_v
+    })
 `);
 
     iapwsListo = true;
     var banner = document.getElementById('pyodide-banner');
     banner.className = 'ready';
-    banner.innerHTML = '✅ IAPWS-IF97 listo (librería Python <code>iapws</code>). Ya puede calcular.';
+    banner.innerHTML = '✅ IAPWS-IF97 listo. Calculando curva de saturación…';
+
+    try {
+        var satJson = await pyodide.runPythonAsync("curva_saturacion()");
+        SAT = JSON.parse(satJson);
+        banner.innerHTML = '✅ IAPWS-IF97 listo. Ya puede calcular y graficar.';
+    } catch (eSat) {
+        console.error('Error curva saturación', eSat);
+        banner.innerHTML = '✅ IAPWS-IF97 listo (curva de saturación no disponible).';
+    }
+    _redibujarDiagramas();
+    window.addEventListener('resize', _debounce(_redibujarDiagramas, 150));
     console.log("IAPWS-IF97 cargado.");
   } catch (e) {
     console.error(e);
@@ -479,7 +601,7 @@ function leerDatos() {
 }
 
 /* ============================================================
-   UI — unidades y limpieza
+   UI
    ============================================================ */
 function actualizarUnidades() {
   var uP = document.getElementById('uP').value;
@@ -509,7 +631,7 @@ function convertirTemperaturas(nuevaU, viejaU) {
   ['p1_T', 'p2_T', 'f_T0'].forEach(function(id) {
     var el = document.getElementById(id);
     if (!el) return;
-    var val = el.value.trim().replace(',', '.');
+    var val = el.value.trim().replace('.', ',');
     if (val === '') return;
     var num = parseFloat(val);
     if (isNaN(num)) return;
@@ -537,7 +659,9 @@ function limpiarTodo() {
   document.getElementById('resultados').innerHTML =
     '<span style="color:#78909c;">Los resultados aparecerán aquí...</span>';
   resultados = {};
+  ultimoContexto = null;
   actualizarUnidades();
+  _redibujarDiagramas();
 }
 
 /* ============================================================
@@ -658,6 +782,7 @@ async function generarBalanceMasa(d) {
 
 async function generarBalanceEnergia(d) {
   var c = await contexto(d);
+  ultimoContexto = c;
   var doc = [];
   var st1 = c.st1, st2 = c.st2, st2s = c.st2s, m = c.m, Q = c.Q, W = c.W, modo = c.modo, wesp = c.wesp;
   var v1 = c.v1, v2 = c.v2, z1 = c.z1, z2 = c.z2, notas = c.notas, avisos = c.avisos;
@@ -725,7 +850,7 @@ async function generarBalanceEnergia(d) {
     doc.push({ tag: 'res', txt: 'Resultado: Ẇ = ' + n(W) + ' kW' });
   }
 
-  var upd = { st1: st1, st2: st2, m: m, W: W };
+  var upd = { st1: st1, st2: st2, st2s: st2s, m: m, W: W };
   if (c.Q_calc) upd.Q = c.Q;
   if (c.eta_c !== null) upd.eta = c.eta_c;
   return { doc: doc, upd: upd, avisos: avisos, notas: notas };
@@ -733,6 +858,7 @@ async function generarBalanceEnergia(d) {
 
 async function generarBalanceEntropia(d) {
   var c = await contexto(d);
+  ultimoContexto = c;
   var doc = [];
   var st1 = c.st1, st2 = c.st2, st2s = c.st2s, m = c.m, Q = c.Q, modo = c.modo, notas = c.notas, avisos = c.avisos;
   var s1 = st1.s, s2 = st2.s;
@@ -769,14 +895,14 @@ async function generarBalanceEntropia(d) {
   doc.push({ tag: '', txt: 'Ŝgen = ' + n(s2) + ' − ' + n(s1) + q_t + ' = ' + n(sgen_esp,5) + ' kJ/(kg·K)' });
   if (Sgen !== null) doc.push({ tag: '', txt: 'Ṡgen = Ṁ·Ŝgen = ' + n(Sgen) + ' kW/K' });
 
-  var upd = { st1: st1, st2: st2, m: m, W: c.W };
+  var upd = { st1: st1, st2: st2, st2s: st2s, m: m, W: c.W };
   if (c.Q_calc) upd.Q = c.Q;
   if (c.eta_c !== null) upd.eta = c.eta_c;
   return { doc: doc, upd: upd, avisos: avisos, notas: notas };
 }
 
 /* ============================================================
-   MOSTRAR RESULTADOS
+   RESULTADOS
    ============================================================ */
 function mostrarResultados(lista) {
   var cont = document.getElementById('resultados');
@@ -892,6 +1018,9 @@ async function ejecutarBalance(tipo) {
     aplicarResultados(res.upd);
     resultados[tipo] = res;
     mostrarResultados([res]);
+    if (res.upd && res.upd.st1 && res.upd.st2) {
+      dibujarDiagramasCon(res.upd.st1, res.upd.st2, res.upd.st2s || null);
+    }
   } catch (e) { mostrarError(e.message); }
 }
 
@@ -904,9 +1033,12 @@ async function ejecutarTodos() {
     lista.push(await generarBalanceMasa(d));
     lista.push(await generarBalanceEnergia(d));
     lista.push(await generarBalanceEntropia(d));
-    // Aplicar actualizaciones del último cálculo (energía)
     lista.forEach(function(res) { aplicarResultados(res.upd); });
     mostrarResultados(lista);
+    var e = resultados['energia'];
+    if (e && e.upd && e.upd.st1 && e.upd.st2) {
+      dibujarDiagramasCon(e.upd.st1, e.upd.st2, e.upd.st2s || null);
+    }
   } catch (e) { mostrarError(e.message); if (lista.length) mostrarResultados(lista); }
 }
 
@@ -944,6 +1076,530 @@ function cargarEjemplo(n) {
 }
 
 /* ============================================================
+   DIAGRAMAS
+   ============================================================ */
+
+function _ajustarCanvas(cv) {
+  if (!cv) return;
+  var dpr = window.devicePixelRatio || 1;
+  var anchoCSS = cv.parentElement ? cv.parentElement.clientWidth : cv.clientWidth;
+  if (anchoCSS < 50) anchoCSS = 460;
+  var alto = Math.round(anchoCSS * 0.68);
+  cv.style.width = anchoCSS + 'px';
+  cv.style.height = alto + 'px';
+  cv.width = Math.round(anchoCSS * dpr);
+  cv.height = Math.round(alto * dpr);
+  var ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx: ctx, W: anchoCSS, H: alto };
+}
+
+function _fmtTick(v, rango) {
+  var av = Math.abs(v);
+  if (av === 0) return '0';
+  if (av >= 10000) return v.toFixed(0);
+  if (av >= 100) return v.toFixed(1).replace(/\.0$/, '');
+  if (av >= 1) return v.toFixed(2).replace(/\.?0+$/, '');
+  if (av >= 0.01) return v.toFixed(3).replace(/\.?0+$/, '');
+  return v.toExponential(1);
+}
+
+function _escala(min, max, padFrac) {
+  if (!isFinite(min) || !isFinite(max)) { min = 0; max = 1; }
+  if (max === min) { max += 1; min -= 1; }
+  var pad = (max - min) * (padFrac === undefined ? 0.06 : padFrac);
+  return { min: min - pad, max: max + pad };
+}
+
+function _mapX(v, esc, m, pw) { return m.l + pw * (v - esc.min) / (esc.max - esc.min); }
+function _mapY(v, esc, m, ph) { return m.t + ph * (1 - (v - esc.min) / (esc.max - esc.min)); }
+
+/* Márgenes que dejan espacio superior para el sombrero del título del eje Y */
+function _dibujarMarco(ctx, W, H, escX, escY, xLabel, yLabel, xLog, yLog) {
+  var m = { l: 54, r: 14, t: 14, b: 38 };
+  var pw = W - m.l - m.r, ph = H - m.t - m.b;
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(m.l, m.t, pw, ph);
+
+  ctx.strokeStyle = '#e8eef2';
+  ctx.lineWidth = 1;
+  var nGridX = 10, nGridY = 8;
+  for (var i = 1; i < nGridX; i++) {
+    var gx = m.l + pw * i / nGridX;
+    ctx.beginPath(); ctx.moveTo(gx, m.t); ctx.lineTo(gx, m.t + ph); ctx.stroke();
+  }
+  for (var j = 1; j < nGridY; j++) {
+    var gy = m.t + ph * j / nGridY;
+    ctx.beginPath(); ctx.moveTo(m.l, gy); ctx.lineTo(m.l + pw, gy); ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#90a4ae'; ctx.lineWidth = 1.2;
+  ctx.strokeRect(m.l, m.t, pw, ph);
+
+  ctx.fillStyle = '#37474f'; ctx.font = '10.5px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  var nX = 6;
+  var rangoX = escX.max - escX.min;
+  for (var k = 0; k <= nX; k++) {
+    var vx = escX.min + rangoX * k / nX;
+    var px = m.l + pw * k / nX;
+    ctx.beginPath(); ctx.strokeStyle = '#90a4ae'; ctx.moveTo(px, m.t + ph); ctx.lineTo(px, m.t + ph + 4); ctx.stroke();
+    var labelX = xLog ? _fmtTick(Math.pow(10, vx), 1) : _fmtTick(vx, rangoX);
+    ctx.fillText(labelX, px, m.t + ph + 6);
+  }
+
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  var nY = 6;
+  var rangoY = escY.max - escY.min;
+  for (var l = 0; l <= nY; l++) {
+    var vy = escY.min + rangoY * l / nY;
+    var py = m.t + ph * (1 - l / nY);
+    ctx.beginPath(); ctx.strokeStyle = '#90a4ae'; ctx.moveTo(m.l - 4, py); ctx.lineTo(m.l, py); ctx.stroke();
+    var labelY = yLog ? _fmtTick(Math.pow(10, vy), 1) : _fmtTick(vy, rangoY);
+    ctx.fillText(labelY, m.l - 6, py);
+  }
+
+  /* Título eje X (sin sombrero) */
+  ctx.fillStyle = '#0d47a1'; ctx.font = 'bold 11px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(xLabel, m.l + pw / 2, H - 6);
+
+  /* Título eje Y: usamos caracteres Unicode con sombrero cuando aplique
+     (Ĥ, Ŝ, V̂, Û) o texto plano con la letra mayúscula sola. */
+  ctx.save();
+  ctx.translate(12, m.t + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(yLabel, 0, 0);
+  ctx.restore();
+
+  return m;
+}
+
+function _linea(ctx, pts, mapXf, mapYf, color, dash, width) {
+  ctx.beginPath();
+  var started = false;
+  for (var k = 0; k < pts.length; k++) {
+    var x = pts[k][0], y = pts[k][1];
+    if (!isFinite(x) || !isFinite(y)) { started = false; continue; }
+    var X = mapXf(x), Y = mapYf(y);
+    if (!isFinite(X) || !isFinite(Y)) { started = false; continue; }
+    if (!started) { ctx.moveTo(X, Y); started = true; } else ctx.lineTo(X, Y);
+  }
+  ctx.strokeStyle = color; ctx.lineWidth = width || 1.8;
+  ctx.setLineDash(dash || []);
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.stroke(); ctx.setLineDash([]);
+}
+
+function _soloPunto(ctx, x, y, mapXf, mapYf, color) {
+  if (!isFinite(x) || !isFinite(y)) return;
+  var X = mapXf(x), Y = mapYf(y);
+  if (!isFinite(X) || !isFinite(Y)) return;
+  ctx.beginPath(); ctx.arc(X, Y, 5, 0, 2 * Math.PI);
+  ctx.fillStyle = color; ctx.fill();
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+}
+
+function _etiqueta(ctx, X, Y, texto, color, dx, dy) {
+  dx = (dx === undefined) ? 14 : dx;
+  dy = (dy === undefined) ? -16 : dy;
+  ctx.font = 'bold 12px "Segoe UI", sans-serif';
+  var w = ctx.measureText(texto).width + 12;
+  var h = 18;
+  var x0 = X + dx - w / 2;
+  var y0 = Y + dy - h / 2;
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2, 2]);
+  ctx.moveTo(X, Y);
+  ctx.lineTo(X + dx, Y + dy);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(x0, y0, w, h, 5);
+  else ctx.rect(x0, y0, w, h);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(texto, x0 + w / 2, y0 + h / 2);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+}
+
+function _vacio(cv, msg) {
+  if (!cv) return;
+  var r = _ajustarCanvas(cv);
+  var ctx = r.ctx, W = r.W, H = r.H;
+  ctx.fillStyle = '#fafafa'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#90a4ae'; ctx.font = '13px "Segoe UI", sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(msg || 'Ejecute un balance para graficar', W/2, H/2);
+  ctx.textAlign = 'left';
+}
+
+function _filtCamp(xArr, yArr) {
+  var pts = [];
+  for (var i = 0; i < xArr.length; i++) {
+    if (isFinite(xArr[i]) && isFinite(yArr[i])) pts.push([xArr[i], yArr[i]]);
+  }
+  return pts;
+}
+
+function _rangoPuntos(pts) {
+  var xs = [], ys = [];
+  for (var i = 0; i < pts.length; i++) { xs.push(pts[i][0]); ys.push(pts[i][1]); }
+  return { xs: xs, ys: ys };
+}
+
+var P_CRIT = 22.064;
+var T_CRIT = 647.096;
+var S_CRIT = 4.4070;
+var H_CRIT = 2087.5;
+var V_CRIT = 0.003106;
+
+/* ---- Leyendas HTML ---- */
+function _pintarLeyenda(idDiv, conIsoentropica) {
+  var div = document.getElementById(idDiv);
+  if (!div) return;
+  var html = '';
+  html += '<span class="item"><span class="sw-linea" style="background:#1976d2;"></span>Líq. saturado</span>';
+  html += '<span class="item"><span class="sw-linea" style="background:#e65100;"></span>Vap. saturado</span>';
+  html += '<span class="item"><span class="sw-linea" style="background:#c62828;"></span>Expansión real 1→2</span>';
+  if (conIsoentropica) {
+    html += '<span class="item"><span class="sw-linea dash" style="border-top-color:#6a1b9a;"></span>Isoentrópica 1→2s</span>';
+  }
+  html += '<span class="item"><span class="sw-punto" style="background:#1565c0;"></span>1: entrada</span>';
+  html += '<span class="item"><span class="sw-punto" style="background:#c62828;"></span>2: salida real</span>';
+  if (conIsoentropica) {
+    html += '<span class="item"><span class="sw-punto" style="background:#6a1b9a;"></span>2s: salida isoentrópica</span>';
+  }
+  html += '<span class="item"><span class="sw-punto" style="background:#37474f;"></span>C: punto crítico (647,1 K; 22,06 MPa)</span>';
+  div.innerHTML = html;
+}
+
+/* ---------- T–Ŝ ---------- */
+function dibujarTs(st1, st2, st2s) {
+  var cv = document.getElementById('cvTs');
+  if (!cv) return;
+  if (!SAT) { _vacio(cv, 'Cargando curva de saturación…'); _pintarLeyenda('leyTs', !!st2s); return; }
+  var r = _ajustarCanvas(cv);
+  var ctx = r.ctx, W = r.W, H = r.H;
+  ctx.clearRect(0, 0, W, H);
+
+  var lSat = _filtCamp(SAT.s_l, SAT.T);
+  var vSat = _filtCamp(SAT.s_v, SAT.T);
+  var todos = lSat.concat(vSat);
+  if (st1) todos.push([st1.s, st1.T]);
+  if (st2) todos.push([st2.s, st2.T]);
+  if (st2s) todos.push([st2s.s, st2s.T]);
+
+  var rp = _rangoPuntos(todos);
+  var escX = _escala(Math.min.apply(null, rp.xs), Math.max.apply(null, rp.xs), 0.05);
+  var escY = _escala(Math.min.apply(null, rp.ys), Math.max.apply(null, rp.ys), 0.05);
+  var m = _dibujarMarco(ctx, W, H, escX, escY, 'Ŝ [kJ/(kg·K)]', 'T [K]');
+  var pw = W - m.l - m.r, ph = H - m.t - m.b;
+  var mx = function(v) { return _mapX(v, escX, m, pw); };
+  var my = function(v) { return _mapY(v, escY, m, ph); };
+
+  _linea(ctx, lSat, mx, my, '#1976d2', [], 2);
+  _linea(ctx, vSat, mx, my, '#e65100', [], 2);
+  if (lSat.length && vSat.length) {
+    _linea(ctx, [lSat[lSat.length-1], vSat[vSat.length-1]], mx, my, '#90a4ae', [3, 3], 1.2);
+  }
+  if (st2s && st1) _linea(ctx, [[st1.s, st1.T], [st2s.s, st2s.T]], mx, my, '#6a1b9a', [6, 4], 1.7);
+  if (st1 && st2) _linea(ctx, [[st1.s, st1.T], [st2.s, st2.T]], mx, my, '#c62828', [], 2.6);
+
+  _soloPunto(ctx, S_CRIT, T_CRIT, mx, my, '#37474f');
+  if (st1) _soloPunto(ctx, st1.s, st1.T, mx, my, '#1565c0');
+  if (st2s) _soloPunto(ctx, st2s.s, st2s.T, mx, my, '#6a1b9a');
+  if (st2) _soloPunto(ctx, st2.s, st2.T, mx, my, '#c62828');
+
+  if (st1) _etiqueta(ctx, mx(st1.s), my(st1.T), '1', '#1565c0', 16, -18);
+  if (st2s) _etiqueta(ctx, mx(st2s.s), my(st2s.T), '2s', '#6a1b9a', 16, 18);
+  if (st2) _etiqueta(ctx, mx(st2.s), my(st2.T), '2', '#c62828', 16, -18);
+  _etiqueta(ctx, mx(S_CRIT), my(T_CRIT), 'C', '#37474f', 16, 18);
+
+  _pintarLeyenda('leyTs', !!st2s);
+}
+
+/* ---------- Ĥ–Ŝ ---------- */
+function dibujarHs(st1, st2, st2s) {
+  var cv = document.getElementById('cvHs');
+  if (!cv) return;
+  if (!SAT) { _vacio(cv, 'Cargando curva de saturación…'); _pintarLeyenda('leyHs', !!st2s); return; }
+  var r = _ajustarCanvas(cv);
+  var ctx = r.ctx, W = r.W, H = r.H;
+  ctx.clearRect(0, 0, W, H);
+
+  var lSat = _filtCamp(SAT.s_l, SAT.h_l);
+  var vSat = _filtCamp(SAT.s_v, SAT.h_v);
+  var todos = lSat.concat(vSat);
+  if (st1) todos.push([st1.s, st1.h]);
+  if (st2) todos.push([st2.s, st2.h]);
+  if (st2s) todos.push([st2s.s, st2s.h]);
+
+  var rp = _rangoPuntos(todos);
+  var escX = _escala(Math.min.apply(null, rp.xs), Math.max.apply(null, rp.xs), 0.05);
+  var escY = _escala(Math.min.apply(null, rp.ys), Math.max.apply(null, rp.ys), 0.05);
+  var m = _dibujarMarco(ctx, W, H, escX, escY, 'Ŝ [kJ/(kg·K)]', 'Ĥ [kJ/kg]');
+  var pw = W - m.l - m.r, ph = H - m.t - m.b;
+  var mx = function(v) { return _mapX(v, escX, m, pw); };
+  var my = function(v) { return _mapY(v, escY, m, ph); };
+
+  _linea(ctx, lSat, mx, my, '#1976d2', [], 2);
+  _linea(ctx, vSat, mx, my, '#e65100', [], 2);
+  if (lSat.length && vSat.length) {
+    _linea(ctx, [lSat[lSat.length-1], vSat[vSat.length-1]], mx, my, '#90a4ae', [3, 3], 1.2);
+  }
+  if (st2s && st1) _linea(ctx, [[st1.s, st1.h], [st2s.s, st2s.h]], mx, my, '#6a1b9a', [6, 4], 1.7);
+  if (st1 && st2) _linea(ctx, [[st1.s, st1.h], [st2.s, st2.h]], mx, my, '#c62828', [], 2.6);
+
+  _soloPunto(ctx, S_CRIT, H_CRIT, mx, my, '#37474f');
+  if (st1) _soloPunto(ctx, st1.s, st1.h, mx, my, '#1565c0');
+  if (st2s) _soloPunto(ctx, st2s.s, st2s.h, mx, my, '#6a1b9a');
+  if (st2) _soloPunto(ctx, st2.s, st2.h, mx, my, '#c62828');
+
+  if (st1) _etiqueta(ctx, mx(st1.s), my(st1.h), '1', '#1565c0', 16, -18);
+  if (st2s) _etiqueta(ctx, mx(st2s.s), my(st2s.h), '2s', '#6a1b9a', 16, 18);
+  if (st2) _etiqueta(ctx, mx(st2.s), my(st2.h), '2', '#c62828', 16, -18);
+  _etiqueta(ctx, mx(S_CRIT), my(H_CRIT), 'C', '#37474f', 16, 18);
+
+  _pintarLeyenda('leyHs', !!st2s);
+}
+
+/* ---------- P–Ĥ (P log) ---------- */
+function dibujarPh(st1, st2, st2s) {
+  var cv = document.getElementById('cvPh');
+  if (!cv) return;
+  if (!SAT) { _vacio(cv, 'Cargando curva de saturación…'); _pintarLeyenda('leyPh', !!st2s); return; }
+  var r = _ajustarCanvas(cv);
+  var ctx = r.ctx, W = r.W, H = r.H;
+  ctx.clearRect(0, 0, W, H);
+
+  var lSat = _filtCamp(SAT.h_l, SAT.P);
+  var vSat = _filtCamp(SAT.h_v, SAT.P);
+  var todos = lSat.concat(vSat);
+  if (st1) todos.push([st1.h, st1.P]);
+  if (st2) todos.push([st2.h, st2.P]);
+  if (st2s) todos.push([st2s.h, st2s.P]);
+
+  var rp = _rangoPuntos(todos);
+  var ysLog = rp.ys.filter(function(v){ return v > 0; }).map(Math.log10);
+  var escX = _escala(Math.min.apply(null, rp.xs), Math.max.apply(null, rp.xs), 0.05);
+  var escY = _escala(Math.min.apply(null, ysLog), Math.max.apply(null, ysLog), 0.05);
+  var m = _dibujarMarco(ctx, W, H, escX, escY, 'Ĥ [kJ/kg]', 'P [MPa] (log)', false, true);
+  var pw = W - m.l - m.r, ph = H - m.t - m.b;
+  var mx = function(v) { return _mapX(v, escX, m, pw); };
+  var my = function(v) { return v > 0 ? _mapY(Math.log10(v), escY, m, ph) : NaN; };
+
+  _linea(ctx, lSat, mx, my, '#1976d2', [], 2);
+  _linea(ctx, vSat, mx, my, '#e65100', [], 2);
+  if (lSat.length && vSat.length) {
+    _linea(ctx, [lSat[lSat.length-1], vSat[vSat.length-1]], mx, my, '#90a4ae', [3, 3], 1.2);
+  }
+  if (st2s && st1) _linea(ctx, [[st1.h, st1.P], [st2s.h, st2s.P]], mx, my, '#6a1b9a', [6, 4], 1.7);
+  if (st1 && st2) _linea(ctx, [[st1.h, st1.P], [st2.h, st2.P]], mx, my, '#c62828', [], 2.6);
+
+  _soloPunto(ctx, H_CRIT, P_CRIT, mx, my, '#37474f');
+  if (st1) _soloPunto(ctx, st1.h, st1.P, mx, my, '#1565c0');
+  if (st2s) _soloPunto(ctx, st2s.h, st2s.P, mx, my, '#6a1b9a');
+  if (st2) _soloPunto(ctx, st2.h, st2.P, mx, my, '#c62828');
+
+  if (st1) _etiqueta(ctx, mx(st1.h), my(st1.P), '1', '#1565c0', 16, -18);
+  if (st2s) _etiqueta(ctx, mx(st2s.h), my(st2s.P), '2s', '#6a1b9a', 16, 18);
+  if (st2) _etiqueta(ctx, mx(st2.h), my(st2.P), '2', '#c62828', 16, -18);
+  _etiqueta(ctx, mx(H_CRIT), my(P_CRIT), 'C', '#37474f', 16, -18);
+
+  _pintarLeyenda('leyPh', !!st2s);
+}
+
+/* ---------- P–V̂ (ambos log) ---------- */
+function dibujarPv(st1, st2, st2s) {
+  var cv = document.getElementById('cvPv');
+  if (!cv) return;
+  if (!SAT) { _vacio(cv, 'Cargando curva de saturación…'); _pintarLeyenda('leyPv', !!st2s); return; }
+  var r = _ajustarCanvas(cv);
+  var ctx = r.ctx, W = r.W, H = r.H;
+  ctx.clearRect(0, 0, W, H);
+
+  var lSat = _filtCamp(SAT.v_l, SAT.P);
+  var vSat = _filtCamp(SAT.v_v, SAT.P);
+  var todos = lSat.concat(vSat);
+  if (st1) todos.push([st1.v, st1.P]);
+  if (st2) todos.push([st2.v, st2.P]);
+  if (st2s) todos.push([st2s.v, st2s.P]);
+
+  var rp = _rangoPuntos(todos);
+  var xsLog = rp.xs.filter(function(v){ return v > 0; }).map(Math.log10);
+  var ysLog = rp.ys.filter(function(v){ return v > 0; }).map(Math.log10);
+  var escX = _escala(Math.min.apply(null, xsLog), Math.max.apply(null, xsLog), 0.05);
+  var escY = _escala(Math.min.apply(null, ysLog), Math.max.apply(null, ysLog), 0.05);
+  var m = _dibujarMarco(ctx, W, H, escX, escY, 'V̂ [m³/kg] (log)', 'P [MPa] (log)', true, true);
+  var pw = W - m.l - m.r, ph = H - m.t - m.b;
+  var mx = function(v) { return v > 0 ? _mapX(Math.log10(v), escX, m, pw) : NaN; };
+  var my = function(v) { return v > 0 ? _mapY(Math.log10(v), escY, m, ph) : NaN; };
+
+  _linea(ctx, lSat, mx, my, '#1976d2', [], 2);
+  _linea(ctx, vSat, mx, my, '#e65100', [], 2);
+  if (lSat.length && vSat.length) {
+    _linea(ctx, [lSat[lSat.length-1], vSat[vSat.length-1]], mx, my, '#90a4ae', [3, 3], 1.2);
+  }
+  if (st2s && st1) _linea(ctx, [[st1.v, st1.P], [st2s.v, st2s.P]], mx, my, '#6a1b9a', [6, 4], 1.7);
+  if (st1 && st2) _linea(ctx, [[st1.v, st1.P], [st2.v, st2.P]], mx, my, '#c62828', [], 2.6);
+
+  _soloPunto(ctx, V_CRIT, P_CRIT, mx, my, '#37474f');
+  if (st1) _soloPunto(ctx, st1.v, st1.P, mx, my, '#1565c0');
+  if (st2s) _soloPunto(ctx, st2s.v, st2s.P, mx, my, '#6a1b9a');
+  if (st2) _soloPunto(ctx, st2.v, st2.P, mx, my, '#c62828');
+
+  if (st1) _etiqueta(ctx, mx(st1.v), my(st1.P), '1', '#1565c0', 16, -18);
+  if (st2s) _etiqueta(ctx, mx(st2s.v), my(st2s.P), '2s', '#6a1b9a', 16, 18);
+  if (st2) _etiqueta(ctx, mx(st2.v), my(st2.P), '2', '#c62828', 16, -18);
+  _etiqueta(ctx, mx(V_CRIT), my(P_CRIT), 'C', '#37474f', 16, -18);
+
+  _pintarLeyenda('leyPv', !!st2s);
+}
+
+function dibujarDiagramasCon(st1, st2, st2s) {
+  try {
+    dibujarTs(st1, st2, st2s);
+    dibujarHs(st1, st2, st2s);
+    dibujarPh(st1, st2, st2s);
+    dibujarPv(st1, st2, st2s);
+  } catch (e) {
+    console.error('Error al dibujar diagramas:', e);
+  }
+}
+
+function _redibujarDiagramas() {
+  if (!SAT) { limpiarDiagramas(); return; }
+  if (ultimoContexto && ultimoContexto.st1 && ultimoContexto.st2) {
+    dibujarDiagramasCon(ultimoContexto.st1, ultimoContexto.st2, ultimoContexto.st2s || null);
+  } else {
+    limpiarDiagramas();
+  }
+}
+
+function limpiarDiagramas() {
+  ['cvTs','cvHs','cvPh','cvPv'].forEach(function(id) {
+    _vacio(document.getElementById(id), 'Ejecute un balance para graficar');
+  });
+  _pintarLeyenda('leyTs', true);
+  _pintarLeyenda('leyHs', true);
+  _pintarLeyenda('leyPh', true);
+  _pintarLeyenda('leyPv', true);
+}
+
+async function dibujarTodosLosDiagramas() {
+  if (!iapwsListo) { mostrarError('IAPWS-IF97 aún se está cargando.'); return; }
+  if (ultimoContexto && ultimoContexto.st1 && ultimoContexto.st2) {
+    dibujarDiagramasCon(ultimoContexto.st1, ultimoContexto.st2, ultimoContexto.st2s || null);
+    return;
+  }
+  try {
+    var d = leerDatos();
+    var c = await contexto(d);
+    ultimoContexto = c;
+    dibujarDiagramasCon(c.st1, c.st2, c.st2s || null);
+  } catch (e) {
+    mostrarError('Para graficar necesita estados válidos: ' + e.message);
+  }
+}
+
+function _debounce(fn, ms) {
+  var t = null;
+  return function() {
+    clearTimeout(t);
+    t = setTimeout(function(){ fn(); }, ms);
+  };
+}
+
+/* ============================================================
+   DESCARGA DE DIAGRAMAS (PNG)
+   ============================================================ */
+
+/* Añade un pie con el título a la imagen descargada, sin tocar el canvas visible */
+function _canvasConTitulo(canvasId, titulo) {
+  var cv = document.getElementById(canvasId);
+  if (!cv) return null;
+  var dpr = window.devicePixelRatio || 1;
+  var pieCSS = 26;
+  var extra = document.createElement('canvas');
+  extra.width = cv.width;
+  extra.height = cv.height + Math.round(pieCSS * dpr);
+  var ctx = extra.getContext('2d');
+
+  // Fondo blanco
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, extra.width, extra.height);
+
+  // Copiar el canvas original
+  ctx.drawImage(cv, 0, 0);
+
+  // Pie con título
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  var anchoCSS = cv.width / dpr;
+  var altoCSS = cv.height / dpr;
+  ctx.fillStyle = '#0d47a1';
+  ctx.font = 'bold 12px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(titulo, anchoCSS / 2, altoCSS + pieCSS / 2);
+  // Línea superior del pie
+  ctx.strokeStyle = '#cfd8dc'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(10, altoCSS + 2);
+  ctx.lineTo(anchoCSS - 10, altoCSS + 2);
+  ctx.stroke();
+
+  return extra;
+}
+
+function descargarDiagrama(canvasId, nombreArchivo) {
+  var cv = document.getElementById(canvasId);
+  if (!cv) { mostrarError('No existe el canvas ' + canvasId); return; }
+  var titulo = '';
+  var card = cv.closest('.diag-card');
+  if (card) {
+    var h3 = card.querySelector('h3');
+    if (h3) titulo = h3.textContent.trim();
+  }
+  var img = _canvasConTitulo(canvasId, titulo || nombreArchivo);
+  if (!img) return;
+  try {
+    var url = img.toDataURL('image/png');
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = (nombreArchivo || 'diagrama') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (e) {
+    mostrarError('No se pudo generar la imagen: ' + e.message);
+  }
+}
+
+function descargarTodosLosDiagramas() {
+  var lista = [
+    { id: 'cvTs', nombre: 'diagrama_T-s' },
+    { id: 'cvHs', nombre: 'diagrama_h-s' },
+    { id: 'cvPh', nombre: 'diagrama_P-h' },
+    { id: 'cvPv', nombre: 'diagrama_P-v' }
+  ];
+  // Descarga secuencial con pequeño retardo para que el navegador acepte múltiples descargas
+  var i = 0;
+  function siguiente() {
+    if (i >= lista.length) return;
+    var it = lista[i++];
+    descargarDiagrama(it.id, it.nombre);
+    setTimeout(siguiente, 350);
+  }
+  siguiente();
+}
+
+/* ============================================================
    LISTENERS
    ============================================================ */
 document.getElementById('uP').addEventListener('change', function() {
@@ -965,6 +1621,7 @@ document.getElementById('uT').addEventListener('change', function() {
 window.addEventListener('load', function() {
   limpiarTodo();
   actualizarUnidades();
+  limpiarDiagramas();
   initPyodide();
 });
 </script>
