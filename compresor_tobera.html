@@ -376,7 +376,7 @@
   <div class="diagramas-grid">
     <div class="diag-card">
       <div class="diag-card-head">
-        <h3>💠 Diagrama P–v</h3>
+        <h3>💠 Diagrama P–V̂</h3>
         <button class="diag-dl" onclick="descargarDiagrama('cvPv','diagrama_P-v')">⬇️ PNG</button>
       </div>
       <div class="diag-canvas-wrap"><canvas id="cvPv" class="diag-canvas"></canvas></div>
@@ -384,7 +384,7 @@
     </div>
     <div class="diag-card">
       <div class="diag-card-head">
-        <h3>🌡️ Diagrama T–s</h3>
+        <h3>🌡️ Diagrama T–Ŝ</h3>
         <button class="diag-dl" onclick="descargarDiagrama('cvTs','diagrama_T-s')">⬇️ PNG</button>
       </div>
       <div class="diag-canvas-wrap"><canvas id="cvTs" class="diag-canvas"></canvas></div>
@@ -400,7 +400,7 @@
     </div>
     <div class="diag-card">
       <div class="diag-card-head">
-        <h3>📈 Diagrama h–s</h3>
+        <h3>📈 Diagrama Ĥ–Ŝ</h3>
         <button class="diag-dl" onclick="descargarDiagrama('cvHs','diagrama_h-s')">⬇️ PNG</button>
       </div>
       <div class="diag-canvas-wrap"><canvas id="cvHs" class="diag-canvas"></canvas></div>
@@ -803,7 +803,7 @@ function escribirPanel(panelId, st, sys, pref) {
 }
 
 /* ============================================================
-   RESOLVER COMPRESOR  (convención: h2 > h1, W > 0)
+   RESOLVER COMPRESOR
    ============================================================ */
 async function resolverCompresor(tipo) {
   const cont = document.getElementById('cp_resultados');
@@ -851,7 +851,6 @@ async function calcularCompresor(d) {
   const eta = d.eta !== null ? d.eta / 100 : 0.8;
   if (eta <= 0 || eta > 1) throw new Error('η debe estar entre 0 y 100 %');
 
-  // COMPRESOR: h2 > h1, w_iso = h2s − h1 > 0
   const w_iso = st2s.h - st1.h;
   if (w_iso < 0) throw new Error('P₂ < P₁: no es compresión');
   const w_real = w_iso / eta;
@@ -926,13 +925,11 @@ async function calcularTobera(d) {
 
   let w_iso, w_real, h_salida_real, T2_ideal;
   if (esDifusor) {
-    // DIFUSOR: h2 > h1 ; η = (h2s − h1)/(h2 − h1) ⇒ h2 = h1 + (h2s−h1)/η
     w_iso = st2s.h - st1.h;
     w_real = w_iso / eta;
     h_salida_real = st1.h + w_real;
     T2_ideal = st1.T + w_real / d.Cp;
   } else {
-    // TOBERA: h2 < h1 ; η = (h1 − h2)/(h1 − h2s) ⇒ h2 = h1 − η(h1−h2s)
     w_iso = st1.h - st2s.h;
     w_real = eta * w_iso;
     h_salida_real = st1.h - w_real;
@@ -967,7 +964,7 @@ async function calcularTobera(d) {
 }
 
 /* ============================================================
-   MOSTRAR RESULTADOS
+   MOSTRAR RESULTADOS (con notación de sombrero)
    ============================================================ */
 function mostrarResultadosCompresor(ctx, cont, tipo) {
   const { st1, st2, st2s, w_iso, w_real, eta, m, W, sgen_esp, Sgen, gas, sys } = ctx;
@@ -987,14 +984,14 @@ function mostrarResultadosCompresor(ctx, cont, tipo) {
     html += `  0 = −Ẇ + Ṁ₁Ĥ₁ − Ṁ₂Ĥ₂  →  Ẇ = Ṁ(Ĥ₂ − Ĥ₁)\n\n`;
     html += `<span class="tag-sub">① Entrada (${gas.nombre}):</span>\n`;
     html += `  P₁ = ${n(P_fromSI(st1.P, sys))} ${uP}   T₁ = ${n(T_fromSI(st1.T, sys))} ${uT}   Fase: ${st1.fase}\n`;
-    html += `  h₁ = ${n(h_fromSI(st1.h, sys))} ${uh}   s₁ = ${n(s_fromSI(st1.s, sys))} ${us}\n\n`;
+    html += `  Ĥ₁ = ${n(h_fromSI(st1.h, sys))} ${uh}   Ŝ₁ = ${n(s_fromSI(st1.s, sys))} ${us}\n\n`;
     html += `<span class="tag-sub">②s Salida isoentrópica:</span>\n`;
     html += `  P₂s = ${n(P_fromSI(st2s.P, sys))} ${uP}   T₂s = ${n(T_fromSI(st2s.T, sys))} ${uT}\n`;
-    html += `  h₂s = ${n(h_fromSI(st2s.h, sys))} ${uh}\n`;
-    html += `  Ẇ_iso = Ṁ(h₂s − h₁) = ${n(h_fromSI(w_iso, sys))} ${uh} por unidad de masa\n\n`;
+    html += `  Ĥ₂s = ${n(h_fromSI(st2s.h, sys))} ${uh}\n`;
+    html += `  Ẇ_iso = Ṁ(Ĥ₂s − Ĥ₁) = ${n(h_fromSI(w_iso, sys))} ${uh} por unidad de masa\n\n`;
     html += `<span class="tag-sub">② Salida real (η = ${n(eta*100, 4)} %):</span>\n`;
     html += `  P₂ = ${n(P_fromSI(st2.P, sys))} ${uP}   T₂ = ${n(T_fromSI(st2.T, sys))} ${uT}   Fase: ${st2.fase}\n`;
-    html += `  h₂ = ${n(h_fromSI(st2.h, sys))} ${uh}   s₂ = ${n(s_fromSI(st2.s, sys))} ${us}\n`;
+    html += `  Ĥ₂ = ${n(h_fromSI(st2.h, sys))} ${uh}   Ŝ₂ = ${n(s_fromSI(st2.s, sys))} ${us}\n`;
     html += `  Ẇ_real = Ẇ_iso/η = ${n(h_fromSI(w_real, sys))} ${uh}\n`;
     if (m !== null) html += `<span class="tag-res">Ẇ_real = ${n(h_fromSI(W, sys))} kW   (Ṁ = ${n(m_fromSI(m, sys))} ${um})</span>\n\n`;
     else html += `ⓘ Ingrese Ṁ para calcular potencia\n\n`;
@@ -1037,17 +1034,17 @@ function mostrarResultadosTobera(ctx, cont, tipo) {
     html += `  0 = Ṁ[Ĥ₁−Ĥ₂ + Êc₁−Êc₂]  →  Ĥ₁−Ĥ₂ = Êc₂−Êc₁\n\n`;
     html += `<span class="tag-sub">① Entrada (${gas.nombre}):</span>\n`;
     html += `  P₁ = ${n(P_fromSI(st1.P, sys))} ${uP}   T₁ = ${n(T_fromSI(st1.T, sys))} ${uT}   Fase: ${st1.fase}\n`;
-    html += `  h₁ = ${n(h_fromSI(st1.h, sys))} ${uh}   V₁ = ${n(V_fromSI(v1, sys))} ${uV}\n\n`;
+    html += `  Ĥ₁ = ${n(h_fromSI(st1.h, sys))} ${uh}   V₁ = ${n(V_fromSI(v1, sys))} ${uV}\n\n`;
     html += `<span class="tag-sub">②s Salida isoentrópica:</span>\n`;
     html += `  P₂s = ${n(P_fromSI(st2s.P, sys))} ${uP}   T₂s = ${n(T_fromSI(st2s.T, sys))} ${uT}\n`;
-    html += `  h₂s = ${n(h_fromSI(st2s.h, sys))} ${uh}   |Δh_iso| = ${n(h_fromSI(Math.abs(w_iso), sys))} ${uh}\n\n`;
+    html += `  Ĥ₂s = ${n(h_fromSI(st2s.h, sys))} ${uh}   |ΔĤ_iso| = ${n(h_fromSI(Math.abs(w_iso), sys))} ${uh}\n\n`;
     html += `<span class="tag-sub">② Salida real (η = ${n(eta*100, 4)} %):</span>\n`;
     html += `  P₂ = ${n(P_fromSI(st2.P, sys))} ${uP}   T₂ = ${n(T_fromSI(st2.T, sys))} ${uT}   Fase: ${st2.fase}\n`;
-    html += `  h₂ = ${n(h_fromSI(st2.h, sys))} ${uh}   V₂ = ${n(V_fromSI(v2, sys))} ${uV}\n`;
+    html += `  Ĥ₂ = ${n(h_fromSI(st2.h, sys))} ${uh}   V₂ = ${n(V_fromSI(v2, sys))} ${uV}\n`;
     html += esDifusor
-      ? `  Δh_real = Δh_iso/η = ${n(h_fromSI(w_real, sys))} ${uh}\n`
-      : `  Δh_real = η·Δh_iso = ${n(h_fromSI(w_real, sys))} ${uh}\n`;
-    html += `<span class="tag-res">V₂ = ${n(V_fromSI(v2, sys))} ${uV}  (de V₂ = √(V₁² + 2(h₁−h₂)))</span>\n\n`;
+      ? `  ΔĤ_real = ΔĤ_iso/η = ${n(h_fromSI(w_real, sys))} ${uh}\n`
+      : `  ΔĤ_real = η·ΔĤ_iso = ${n(h_fromSI(w_real, sys))} ${uh}\n`;
+    html += `<span class="tag-res">V₂ = ${n(V_fromSI(v2, sys))} ${uV}  (de V₂ = √(V₁² + 2(Ĥ₁−Ĥ₂)))</span>\n\n`;
   }
   if (tipo === 'todos' || tipo === 'entropia') {
     html += `<span class="tag-h">═══ BALANCE DE ENTROPÍA ═══</span>`;
@@ -1085,7 +1082,7 @@ function mostrarContexto(pref, ctx) {
 }
 
 /* ============================================================
-   DIAGRAMAS (Canvas 2D)
+   DIAGRAMAS (Canvas 2D) — ejes con sombrero
    ============================================================ */
 function _ajustarCanvas(cv) {
   if (!cv) return;
@@ -1207,7 +1204,7 @@ function dibujarPv(st1, st2, st2s, sys) {
   const xs = pts.map(p => p[1]), ys = pts.map(p => p[0]);
   const escX = _escala(Math.min(...xs), Math.max(...xs), 0.1);
   const escY = _escala(Math.min(...ys), Math.max(...ys), 0.1);
-  const m = _dibujarMarco(ctx, W, H, escX, escY, `v [${U[sys].v}]`, `P [${U[sys].P}]`);
+  const m = _dibujarMarco(ctx, W, H, escX, escY, `V̂ [${U[sys].v}]`, `P [${U[sys].P}]`);
   const pw = W - m.l - m.r, ph = H - m.t - m.b;
   const mx = v => _mapX(v, escX, m, pw), my = v => _mapY(v, escY, m, ph);
   if (st2s) _linea(ctx, [[st1.v, st1.P], [st2s.v, st2s.P]], mx, my, '#6a1b9a', [6, 4], 1.7);
@@ -1228,7 +1225,7 @@ function dibujarTs(st1, st2, st2s, sys) {
   const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
   const escX = _escala(Math.min(...xs), Math.max(...xs), 0.1);
   const escY = _escala(Math.min(...ys), Math.max(...ys), 0.1);
-  const m = _dibujarMarco(ctx, W, H, escX, escY, `s [${U[sys].s}]`, `T [${U[sys].T}]`);
+  const m = _dibujarMarco(ctx, W, H, escX, escY, `Ŝ [${U[sys].s}]`, `T [${U[sys].T}]`);
   const pw = W - m.l - m.r, ph = H - m.t - m.b;
   const mx = v => _mapX(v, escX, m, pw), my = v => _mapY(v, escY, m, ph);
   if (st2s) _linea(ctx, [[st1.s, st1.T], [st2s.s, st2s.T]], mx, my, '#6a1b9a', [6, 4], 1.7);
@@ -1270,7 +1267,7 @@ function dibujarHs(st1, st2, st2s, sys) {
   const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
   const escX = _escala(Math.min(...xs), Math.max(...xs), 0.1);
   const escY = _escala(Math.min(...ys), Math.max(...ys), 0.1);
-  const m = _dibujarMarco(ctx, W, H, escX, escY, `s [${U[sys].s}]`, `h [${U[sys].h}]`);
+  const m = _dibujarMarco(ctx, W, H, escX, escY, `Ŝ [${U[sys].s}]`, `Ĥ [${U[sys].h}]`);
   const pw = W - m.l - m.r, ph = H - m.t - m.b;
   const mx = v => _mapX(v, escX, m, pw), my = v => _mapY(v, escY, m, ph);
   if (st2s) _linea(ctx, [[st1.s, st1.h], [st2s.s, st2s.h]], mx, my, '#6a1b9a', [6, 4], 1.7);
@@ -1392,27 +1389,27 @@ function cargarEjemploT(n) {
   document.getElementById('tp_resultados').innerHTML = '<span style="color:#78909c;">Ejecute los balances para ver los resultados...</span>';
 
   if (sys === 'SI') {
-    if (n === 1) { // Vapor
+    if (n === 1) {
       document.getElementById('tp_gas').value = 'Water';
       document.getElementById('tp_model').value = 'real';
       document.getElementById('tp_ideal_opts').style.display = 'none';
       set('tp1_P', '2756,3'); set('tp1_T', '316'); set('tp1_m', '0,3778'); set('tp1_v', '0');
       set('tp2_P', '1795'); set('tp_eta', '95');
-    } else if (n === 2) { // CO₂ CCS
+    } else if (n === 2) {
       document.getElementById('tp_gas').value = 'CO2';
       document.getElementById('tp_model').value = 'ideal';
       document.getElementById('tp_ideal_opts').style.display = 'flex';
       set('tp_cp', '0,846'); set('tp_cv', '0,657'); set('tp_R', '0,189');
       set('tp1_P', '5000'); set('tp1_T', '60'); set('tp1_v', '10'); set('tp1_m', '2');
       set('tp2_P', '1000'); set('tp_eta', '88');
-    } else if (n === 3) { // Aire TOBERA (soplador)
+    } else if (n === 3) {
       document.getElementById('tp_gas').value = 'Air';
       document.getElementById('tp_model').value = 'ideal';
       document.getElementById('tp_ideal_opts').style.display = 'flex';
       set('tp_cp', '1,005'); set('tp_cv', '0,718'); set('tp_R', '0,287');
       set('tp1_P', '500'); set('tp1_T', '100'); set('tp1_v', '20'); set('tp1_m', '1');
       set('tp2_P', '100'); set('tp_eta', '90');
-    } else { // Aire DIFUSOR
+    } else {
       document.getElementById('tp_gas').value = 'Air';
       document.getElementById('tp_model').value = 'ideal';
       document.getElementById('tp_ideal_opts').style.display = 'flex';
