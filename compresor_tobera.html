@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compresores y Toberas · Balances Masa-Energía-Entropía</title>
+<style>
+  * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
+  body { background: #eceff1; margin: 0; padding: 16px; min-height: 100vh; }
+  h1 { font-size: 21px; color: #0d47a1; margin: 0 0 4px 0; text-align: center; }
+  .sub { color: #546e7a; font-size: 12px; margin: 0 0 12px 0; text-align: center; }
+
+  .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .tab-btn { padding: 9px 22px; border: 2px solid #cfd8dc; background: #fff; border-radius: 10px 10px 0 0; font-weight: 700; font-size: 13.5px; color: #546e7a; cursor: pointer; transition: 0.15s; }
+  .tab-btn.active { background: #1976d2; color: #fff; border-color: #1976d2; }
+  .tab-btn:hover:not(.active) { background: #e3f2fd; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .global-units { display: flex; gap: 12px; align-items: center; justify-content: center; background: #fff; padding: 8px 16px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin: 0 auto 12px auto; max-width: fit-content; flex-wrap: wrap; }
+  .global-units label { font-size: 12.5px; font-weight: 600; color: #37474f; }
+  .global-units select { padding: 5px 10px; border: 1px solid #b0bec5; border-radius: 6px; font-size: 12.5px; font-weight: 600; background: #f5f5f5; }
+
+  .app-container { display: flex; flex-wrap: wrap; gap: 14px; max-width: 1750px; margin: 0 auto; align-items: flex-start; }
+  .left-col { display: flex; flex-direction: column; gap: 12px; flex: 1 1 720px; min-width: 520px; max-width: 880px; }
+  .right-col { display: flex; flex-direction: column; gap: 12px; flex: 1 1 380px; min-width: 320px; max-width: 500px; }
+
+  .canvas-wrapper { position: relative; background: #fff; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.15); padding: 10px; }
+  .canvas-inner { position: relative; display: inline-block; width: 100%; line-height: 0; text-align: center; }
+  #imgCompresor, #imgTobera { display: inline-block; width: 40%; height: auto; border-radius: 6px; background: #fafafa; user-select: none; vertical-align: top; }
+
+  .overlay { position: absolute; background: rgba(255,251,230,0.97); border: 2px solid #ffb74d; border-radius: 8px; padding: 5px 7px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); font-size: 10.5px; line-height: 1.3; z-index: 10; width: 165px; }
+  .overlay.c2 { background: rgba(232,245,233,0.97); border-color: #66bb6a; }
+  .overlay .ttl { font-weight: 700; font-size: 10.5px; color: #0d47a1; margin-bottom: 3px; text-align: center; border-bottom: 1px dashed #ffcc80; padding-bottom: 2px; }
+  .overlay.c2 .ttl { color: #1b5e20; border-bottom-color: #a5d6a7; }
+  .overlay .fld { display: flex; align-items: center; justify-content: space-between; gap: 3px; margin-bottom: 1px; }
+  .overlay .fld label { font-size: 9.5px; color: #37474f; font-weight: 600; white-space: nowrap; }
+  .overlay .fld input { width: 76px; padding: 1px 3px; border: 1px solid #b0bec5; border-radius: 3px; font-size: 10px; font-family: 'Consolas', monospace; background: #fff; text-align: right; }
+  .overlay .fld input:focus { border-color: #1976d2; outline: none; box-shadow: 0 0 0 2px rgba(25,118,210,0.2); }
+  .overlay .fld input.calculado { background: #c8e6c9 !important; border-color: #2e7d32 !important; color: #1b5e20; font-weight: 700; }
+  .overlay .fase { margin-top: 3px; font-size: 9px; font-style: italic; color: #555; border-top: 1px dashed #ffcc80; padding-top: 2px; text-align: center; }
+  .overlay.c2 .fase { border-top-color: #a5d6a7; }
+
+  #panelC1, #panelT1 { top: 0; left: 6px; }
+  #panelC2, #panelT2 { top: 0; right: 6px; }
+
+  .legend { display: flex; gap: 14px; align-items: center; font-size: 11px; color: #455a64; padding: 5px 10px; background: #f5f5f5; border-radius: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .legend .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid #90a4ae; vertical-align: middle; margin-right: 5px; }
+  .legend .sw.user { background: #fff; }
+  .legend .sw.calc { background: #c8e6c9; border-color: #2e7d32; }
+
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 11px 13px; }
+  .card h3 { margin: 0 0 7px 0; font-size: 13.5px; color: #0d47a1; border-bottom: 2px solid #e3f2fd; padding-bottom: 4px; }
+  .card .row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-bottom: 5px; }
+  .card .row label { font-size: 11px; color: #37474f; font-weight: 500; }
+  .card .row input, .card .row select { padding: 4px 7px; border: 1px solid #b0bec5; border-radius: 5px; font-size: 12px; font-family: 'Consolas', monospace; }
+
+  .bottom-row { display: grid; grid-template-columns: 1.15fr 1fr; gap: 12px; }
+  @media (max-width: 700px) { .bottom-row { grid-template-columns: 1fr; } }
+
+  .btn-group { display: flex; flex-wrap: wrap; gap: 5px; margin: 5px 0; }
+  .btn { padding: 7px 10px; border: none; border-radius: 7px; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.15s; flex: 1 1 auto; min-width: 85px; }
+  .btn:hover { filter: brightness(0.93); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; filter: none; transform: none; }
+  .btn-masa { background: #1976d2; color: #fff; }
+  .btn-energia { background: #e65100; color: #fff; }
+  .btn-entropia { background: #6a1b9a; color: #fff; }
+  .btn-todos { background: #1b5e20; color: #fff; }
+  .btn-sec { background: #cfd8dc; color: #263238; }
+  .btn-ejemplo { background: #ffb74d; color: #3e2723; }
+  .btn-limpiar { background: #ef5350; color: #fff; }
+  .btn-diag { background: #00838f; color: #fff; }
+  .btn-down { background: #455a64; color: #fff; }
+
+  .resultados { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; max-height: 560px; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 11px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .tag-h { font-weight: 700; color: #0d47a1; font-size: 12px; display: block; margin-top: 4px; }
+  .tag-res { font-weight: 700; color: #1b5e20; background: #e8f5e9; padding: 1px 4px; border-radius: 3px; }
+  .tag-warn { color: #b71c1c; font-weight: 600; }
+  .tag-nota { color: #e65100; }
+  .tag-sub { font-weight: 600; color: #37474f; margin-top: 4px; display: block; }
+  .tag-info { color: #01579b; font-weight: 600; }
+
+  .contexto {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
+    border-left: 4px solid #1976d2;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 11.5px;
+    color: #263238;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    display: none;
+  }
+  .contexto.visible { display: block; }
+  .contexto .ctx-titulo { font-weight: 700; color: #0d47a1; font-size: 12.5px; display: block; margin-bottom: 3px; }
+  .contexto .ctx-cuerpo { display: block; }
+  .contexto .ctx-cuerpo b { color: #1b5e20; }
+
+  #pyodide-banner { display: flex; align-items: center; gap: 10px; background: #fff8e1; border: 2px solid #ffb74d; color: #7c5a00; padding: 9px 15px; border-radius: 8px; font-size: 12px; font-weight: 600; margin: 0 auto 12px auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); max-width: 820px; text-align: center; }
+  #pyodide-banner.ready { background: #e8f5e9; border-color: #66bb6a; color: #1b5e20; }
+  #pyodide-banner.error { background: #ffebee; border-color: #ef5350; color: #b71c1c; }
+  #pyodide-banner.partial { background: #fff3e0; border-color: #ff9800; color: #e65100; }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #ffb74d; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .props-resumen { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; font-size: 11px; font-family: 'Consolas', monospace; }
+  .props-resumen span { color: #37474f; }
+  .props-resumen b { color: #0d47a1; }
+
+  .diagramas-section { max-width: 1750px; margin: 22px auto 0 auto; }
+  .diagramas-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .diagramas-header h2 { margin: 0; font-size: 17px; color: #0d47a1; }
+  .diagramas-header .hint { font-size: 11.5px; color: #607d8b; }
+  .diagramas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 1000px) { .diagramas-grid { grid-template-columns: 1fr; } }
+  .diag-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); padding: 11px 13px; display: flex; flex-direction: column; }
+  .diag-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
+  .diag-card-head h3 { margin: 0; font-size: 13px; color: #0d47a1; }
+  .diag-dl { background: #455a64; color: #fff; border: none; border-radius: 6px; padding: 3px 8px; font-size: 10px; font-weight: 600; cursor: pointer; }
+  .diag-canvas-wrap { position: relative; width: 100%; }
+  .diag-canvas { display: block; width: 100%; height: auto; background: #fff; border-radius: 6px; border: 1px solid #cfd8dc; }
+  .diag-leyenda { display: flex; flex-wrap: wrap; gap: 3px 10px; margin-top: 7px; padding: 5px 7px; background: #f5f7f9; border-radius: 6px; border: 1px solid #e1e7eb; font-size: 9.5px; color: #37474f; }
+  .diag-leyenda .item { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+  .diag-leyenda .sw-linea { display: inline-block; width: 14px; height: 2px; border-radius: 2px; }
+  .diag-leyenda .sw-linea.dash { height: 0; border-top: 2px dashed; background: transparent !important; }
+  .diag-leyenda .sw-punto { display: inline-block; width: 6px; height: 6px; border-radius: 50%; border: 1px solid #fff; }
+
+  .footer { text-align: center; font-size: 10.5px; color: #78909c; margin-top: 18px; padding: 8px; }
+
+  @media (max-width: 1100px) {
+    .app-container { flex-direction: column; }
+    .left-col, .right-col { max-width: none; min-width: 0; }
+    #imgCompresor, #imgTobera { width: 45%; }
+  }
+</style>
+</head>
+<body>
+
+<h1>⚙️ Compresores y Toberas · Balances de Materia, Energía y Entropía</h1>
+<p class="sub">Dr. Ronald F. Rodriguez Espinoza — Propiedades: <b>Gas ideal (JS)</b> + <b>IAPWS-IF97</b> (Pyodide) + <b>CoolProp HTTP</b></p>
+
+<div id="pyodide-banner">
+  <span class="spinner"></span>
+  <span id="pyodide-msg">Inicializando…</span>
+</div>
+
+<div class="global-units">
+  <label>Sistema de unidades:</label>
+  <select id="unitSystem">
+    <option value="SI" selected>🌐 SI (kPa · °C · kg/s · kJ/kg · m/s)</option>
+    <option value="IMP">🇺🇸 Imperial (psia · °F · lbm/s · Btu/lbm · ft/s)</option>
+  </select>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="compresores">🔧 Compresores</button>
+  <button class="tab-btn" data-tab="toberas">💨 Toberas / Difusores</button>
+</div>
+
+<!-- ============================================================
+     PESTAÑA COMPRESORES
+     ============================================================ -->
+<div id="tab-compresores" class="tab-content active">
+  <div class="app-container">
+    <div class="left-col">
+      <div class="canvas-wrapper">
+        <div class="canvas-inner">
+          <img id="imgCompresor" src="compresor.png" alt="Compresor"
+               onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=&quot;padding:20px;text-align:center;color:#90a4ae;font-size:12px;&quot;>📷 coloque <b>compresor.png</b> en la misma carpeta</div>')">
+          <div class="overlay c1" id="panelC1">
+            <div class="ttl">① ENTRADA</div>
+            <div class="fld"><label id="lbl_cp1">P₁ [kPa]</label><input type="text" id="cp1_P"></div>
+            <div class="fld"><label id="lbl_ct1">T₁ [°C]</label><input type="text" id="cp1_T"></div>
+            <div class="fld"><label>Ṁ₁ [kg/s]</label><input type="text" id="cp1_m"></div>
+            <div class="fld"><label>V₁ [m/s]</label><input type="text" id="cp1_v"></div>
+            <div class="fase" id="cp1_fase">Fase: —</div>
+          </div>
+          <div class="overlay c2" id="panelC2">
+            <div class="ttl">② SALIDA</div>
+            <div class="fld"><label id="lbl_cp2">P₂ [kPa]</label><input type="text" id="cp2_P"></div>
+            <div class="fld"><label id="lbl_ct2">T₂ [°C]</label><input type="text" id="cp2_T"></div>
+            <div class="fld"><label>Ṁ₂ [kg/s]</label><input type="text" id="cp2_m"></div>
+            <div class="fld"><label>V₂ [m/s]</label><input type="text" id="cp2_v"></div>
+            <div class="fase" id="cp2_fase">Fase: —</div>
+          </div>
+        </div>
+        <div class="legend">
+          <span><span class="sw user"></span>Dato ingresado</span>
+          <span><span class="sw calc"></span>Valor calculado</span>
+          <span style="margin-left:auto; color:#78909c; font-size:10px;">Imagen: <code>compresor.png</code></span>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="card">
+          <h3>🌎 Fluido de trabajo</h3>
+          <div class="row">
+            <label>Gas:</label>
+            <select id="cp_gas" style="flex:1;"></select>
+          </div>
+          <div class="row">
+            <label>Modelo:</label>
+            <select id="cp_model" style="flex:1;">
+              <option value="ideal" selected>Gas Ideal (JS)</option>
+              <option value="real">Gas Real (IAPWS / CoolProp HTTP)</option>
+            </select>
+          </div>
+          <div class="row" id="cp_ideal_opts">
+            <label>Cp:</label><input type="text" id="cp_cp" value="1,005" style="width:62px;">
+            <label>Cv:</label><input type="text" id="cp_cv" value="0,718" style="width:62px;">
+            <label>R:</label><input type="text" id="cp_R" value="0,287" style="width:70px;">
+          </div>
+          <div class="row">
+            <label>η isoent. [%]:</label><input type="text" id="cp_eta" value="80" style="width:60px;">
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>📋 Propiedades del fluido</h3>
+          <div id="cp_props" class="props-resumen"><span style="color:#78909c;">Seleccione un gas…</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="card">
+        <h3>🔘 Ejecutar balances</h3>
+        <div class="btn-group">
+          <button class="btn btn-masa" onclick="resolverCompresor('masa')">⚖️ Masa</button>
+          <button class="btn btn-energia" onclick="resolverCompresor('energia')">⚡ Energía</button>
+          <button class="btn btn-entropia" onclick="resolverCompresor('entropia')">🌀 Entropía</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-todos" onclick="resolverCompresor('todos')">✅ Resolver los 3</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-sec" onclick="completarEstadoC('cp1')">🔄 Estado 1</button>
+          <button class="btn btn-sec" onclick="completarEstadoC('cp2')">🔄 Estado 2</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-ejemplo" onclick="cargarEjemploC(1)">📋 Ej.1 H₂ verde</button>
+          <button class="btn btn-ejemplo" onclick="cargarEjemploC(2)">📋 Ej.2 CO₂ CCS</button>
+          <button class="btn btn-ejemplo" onclick="cargarEjemploC(3)">📋 Ej.3 Aire</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-limpiar" onclick="limpiarTodo('compresores')">🧹 Limpiar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📊 Resultados</h3>
+        <div class="contexto" id="cp_contexto">
+          <span class="ctx-titulo" id="cp_ctx_titulo"></span>
+          <span class="ctx-cuerpo" id="cp_ctx_cuerpo"></span>
+        </div>
+        <div class="resultados" id="cp_resultados"><span style="color:#78909c;">Los resultados aparecerán aquí...</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PESTAÑA TOBERAS
+     ============================================================ -->
+<div id="tab-toberas" class="tab-content">
+  <div class="app-container">
+    <div class="left-col">
+      <div class="canvas-wrapper">
+        <div class="canvas-inner">
+          <img id="imgTobera" src="tobera.png" alt="Tobera"
+               onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=&quot;padding:20px;text-align:center;color:#90a4ae;font-size:12px;&quot;>📷 coloque <b>tobera.png</b> en la misma carpeta</div>')">
+          <div class="overlay c1" id="panelT1">
+            <div class="ttl">① ENTRADA</div>
+            <div class="fld"><label id="lbl_tp1">P₁ [kPa]</label><input type="text" id="tp1_P"></div>
+            <div class="fld"><label id="lbl_tt1">T₁ [°C]</label><input type="text" id="tp1_T"></div>
+            <div class="fld"><label>Ṁ₁ [kg/s]</label><input type="text" id="tp1_m"></div>
+            <div class="fld"><label>V₁ [m/s]</label><input type="text" id="tp1_v"></div>
+            <div class="fase" id="tp1_fase">Fase: —</div>
+          </div>
+          <div class="overlay c2" id="panelT2">
+            <div class="ttl">② SALIDA</div>
+            <div class="fld"><label id="lbl_tp2">P₂ [kPa]</label><input type="text" id="tp2_P"></div>
+            <div class="fld"><label id="lbl_tt2">T₂ [°C]</label><input type="text" id="tp2_T"></div>
+            <div class="fld"><label>Ṁ₂ [kg/s]</label><input type="text" id="tp2_m"></div>
+            <div class="fld"><label>V₂ [m/s]</label><input type="text" id="tp2_v"></div>
+            <div class="fase" id="tp2_fase">Fase: —</div>
+          </div>
+        </div>
+        <div class="legend">
+          <span><span class="sw user"></span>Dato ingresado</span>
+          <span><span class="sw calc"></span>Valor calculado</span>
+          <span style="margin-left:auto; color:#78909c; font-size:10px;">Imagen: <code>tobera.png</code></span>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="card">
+          <h3>🌎 Fluido de trabajo</h3>
+          <div class="row">
+            <label>Gas:</label>
+            <select id="tp_gas" style="flex:1;"></select>
+          </div>
+          <div class="row">
+            <label>Modelo:</label>
+            <select id="tp_model" style="flex:1;">
+              <option value="ideal" selected>Gas Ideal (JS)</option>
+              <option value="real">Gas Real (IAPWS / CoolProp HTTP)</option>
+            </select>
+          </div>
+          <div class="row" id="tp_ideal_opts">
+            <label>Cp:</label><input type="text" id="tp_cp" value="1,005" style="width:62px;">
+            <label>Cv:</label><input type="text" id="tp_cv" value="0,718" style="width:62px;">
+            <label>R:</label><input type="text" id="tp_R" value="0,287" style="width:70px;">
+          </div>
+          <div class="row">
+            <label>η isoent. [%]:</label><input type="text" id="tp_eta" value="90" style="width:60px;">
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>📋 Propiedades del fluido</h3>
+          <div id="tp_props" class="props-resumen"><span style="color:#78909c;">Seleccione un gas…</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="card">
+        <h3>🔘 Ejecutar balances</h3>
+        <div class="btn-group">
+          <button class="btn btn-masa" onclick="resolverTobera('masa')">⚖️ Masa</button>
+          <button class="btn btn-energia" onclick="resolverTobera('energia')">⚡ Energía</button>
+          <button class="btn btn-entropia" onclick="resolverTobera('entropia')">🌀 Entropía</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-todos" onclick="resolverTobera('todos')">✅ Resolver los 3</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-sec" onclick="completarEstadoT('tp1')">🔄 Estado 1</button>
+          <button class="btn btn-sec" onclick="completarEstadoT('tp2')">🔄 Estado 2</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-ejemplo" onclick="cargarEjemploT(1)">📋 Ej.1 Vapor</button>
+          <button class="btn btn-ejemplo" onclick="cargarEjemploT(2)">📋 Ej.2 CO₂</button>
+          <button class="btn btn-ejemplo" onclick="cargarEjemploT(3)">📋 Ej.3 Aire</button>
+          <button class="btn btn-ejemplo" onclick="cargarEjemploT(4)">📋 Ej.4 Difusor</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-limpiar" onclick="limpiarTodo('toberas')">🧹 Limpiar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>📊 Resultados</h3>
+        <div class="contexto" id="tp_contexto">
+          <span class="ctx-titulo" id="tp_ctx_titulo"></span>
+          <span class="ctx-cuerpo" id="tp_ctx_cuerpo"></span>
+        </div>
+        <div class="resultados" id="tp_resultados"><span style="color:#78909c;">Los resultados aparecerán aquí...</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     DIAGRAMAS
+     ============================================================ -->
+<div class="diagramas-section">
+  <div class="diagramas-header">
+    <h2>📈 Diagramas termodinámicos</h2>
+    <span class="hint">Estados 1 (entrada), 2 (salida real) y 2s (isoentrópico).</span>
+    <button class="btn btn-diag" style="flex:0 0 auto; min-width:120px;" onclick="redibujarActivo()">🔄 Redibujar</button>
+    <button class="btn btn-down" style="flex:0 0 auto; min-width:140px;" onclick="descargarTodosDiagramas()">⬇️ Descargar todos</button>
+  </div>
+  <div class="diagramas-grid">
+    <div class="diag-card">
+      <div class="diag-card-head">
+        <h3>💠 Diagrama P–v</h3>
+        <button class="diag-dl" onclick="descargarDiagrama('cvPv','diagrama_P-v')">⬇️ PNG</button>
+      </div>
+      <div class="diag-canvas-wrap"><canvas id="cvPv" class="diag-canvas"></canvas></div>
+      <div class="diag-leyenda" id="leyPv"></div>
+    </div>
+    <div class="diag-card">
+      <div class="diag-card-head">
+        <h3>🌡️ Diagrama T–s</h3>
+        <button class="diag-dl" onclick="descargarDiagrama('cvTs','diagrama_T-s')">⬇️ PNG</button>
+      </div>
+      <div class="diag-canvas-wrap"><canvas id="cvTs" class="diag-canvas"></canvas></div>
+      <div class="diag-leyenda" id="leyTs"></div>
+    </div>
+    <div class="diag-card">
+      <div class="diag-card-head">
+        <h3>📐 Diagrama P–T</h3>
+        <button class="diag-dl" onclick="descargarDiagrama('cvPT','diagrama_P-T')">⬇️ PNG</button>
+      </div>
+      <div class="diag-canvas-wrap"><canvas id="cvPT" class="diag-canvas"></canvas></div>
+      <div class="diag-leyenda" id="leyPT"></div>
+    </div>
+    <div class="diag-card">
+      <div class="diag-card-head">
+        <h3>📈 Diagrama h–s</h3>
+        <button class="diag-dl" onclick="descargarDiagrama('cvHs','diagrama_h-s')">⬇️ PNG</button>
+      </div>
+      <div class="diag-canvas-wrap"><canvas id="cvHs" class="diag-canvas"></canvas></div>
+      <div class="diag-leyenda" id="leyHs"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Dr. Ronald F. Rodriguez Espinoza · Gas ideal (JS) · IAPWS-IF97 (Pyodide) · CoolProp HTTP
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<script>
+/* ============================================================
+   ESTADO GLOBAL
+   ============================================================ */
+let pyodide = null;
+let pyodideListo = false;
+let tabActivo = 'compresores';
+let ultimoContexto = { compresores: null, toberas: null };
+
+const DEFAULTS = {
+  cp: { gas: 'Air', model: 'ideal', Cp: '1,005', Cv: '0,718', R: '0,287', eta: '80' },
+  tp: { gas: 'Air', model: 'ideal', Cp: '1,005', Cv: '0,718', R: '0,287', eta: '90' }
+};
+
+/* ============================================================
+   LISTA AMPLIADA DE GASES
+   ============================================================ */
+const GASES = [
+  { group: '── Gases comunes ──', items: [
+    { coolprop: 'Air',     nombre: 'Aire',                  M: 28.97,  R: 0.287,  Cp: 1.005, Cv: 0.718, iapws: false },
+    { coolprop: 'Nitrogen',nombre: 'Nitrógeno (N₂)',        M: 28.013, R: 0.2968, Cp: 1.040, Cv: 0.743, iapws: false },
+    { coolprop: 'Oxygen',  nombre: 'Oxígeno (O₂)',          M: 31.999, R: 0.2598, Cp: 0.918, Cv: 0.658, iapws: false },
+    { coolprop: 'CO2',     nombre: 'Dióxido de carbono (CO₂)', M: 44.01, R: 0.1889, Cp: 0.846, Cv: 0.657, iapws: false },
+    { coolprop: 'Water',   nombre: 'Agua / Vapor (H₂O)',    M: 18.015, R: 0.4615, Cp: 2.080, Cv: 1.619, iapws: true },
+    { coolprop: 'CO',      nombre: 'Monóxido de carbono (CO)', M: 28.01, R: 0.2968, Cp: 1.040, Cv: 0.744, iapws: false },
+  ]},
+  { group: '── Gases del aire / combustión ──', items: [
+    { coolprop: 'Argon',   nombre: 'Argón (Ar)',   M: 39.948,R: 0.2081, Cp: 0.520, Cv: 0.312, iapws: false },
+    { coolprop: 'SO2',     nombre: 'Dióxido de azufre (SO₂)', M: 64.07, R: 0.1298, Cp: 0.640, Cv: 0.510, iapws: false },
+    { coolprop: 'H2S',     nombre: 'Sulfuro de hidrógeno (H₂S)', M: 34.08, R: 0.2439, Cp: 1.003, Cv: 0.759, iapws: false },
+    { coolprop: 'NO',      nombre: 'Óxido nítrico (NO)', M: 30.01, R: 0.2770, Cp: 0.997, Cv: 0.720, iapws: false },
+    { coolprop: 'N2O',     nombre: 'Óxido nitroso (N₂O)', M: 44.01, R: 0.1889, Cp: 0.879, Cv: 0.690, iapws: false },
+    { coolprop: 'NO2',     nombre: 'Dióxido de nitrógeno (NO₂)', M: 46.01, R: 0.1808, Cp: 0.839, Cv: 0.658, iapws: false },
+  ]},
+  { group: '── Hidrocarburos ──', items: [
+    { coolprop: 'Methane', nombre: 'Metano (CH₄)', M: 16.04, R: 0.5183, Cp: 2.22, Cv: 1.70, iapws: false },
+    { coolprop: 'Ethane',  nombre: 'Etano (C₂H₆)', M: 30.07, R: 0.2765, Cp: 1.75, Cv: 1.48, iapws: false },
+    { coolprop: 'Propane', nombre: 'Propano (C₃H₈)', M: 44.10, R: 0.1885, Cp: 1.67, Cv: 1.48, iapws: false },
+    { coolprop: 'n-Butane',nombre: 'n-Butano (C₄H₁₀)', M: 58.12, R: 0.1431, Cp: 1.66, Cv: 1.51, iapws: false },
+    { coolprop: 'IsoButane',nombre: 'Isobutano (C₄H₁₀)', M: 58.12, R: 0.1431, Cp: 1.60, Cv: 1.46, iapws: false },
+    { coolprop: 'n-Pentane',nombre: 'n-Pentano (C₅H₁₂)', M: 72.15, R: 0.1152, Cp: 1.65, Cv: 1.53, iapws: false },
+    { coolprop: 'Ethylene',nombre: 'Etileno (C₂H₄)', M: 28.05, R: 0.2964, Cp: 1.53, Cv: 1.23, iapws: false },
+    { coolprop: 'Propylene',nombre: 'Propileno (C₃H₆)', M: 42.08, R: 0.1976, Cp: 1.54, Cv: 1.34, iapws: false },
+    { coolprop: 'Acetylene',nombre: 'Acetileno (C₂H₂)', M: 26.04, R: 0.3193, Cp: 1.68, Cv: 1.36, iapws: false },
+  ]},
+  { group: '── Gases nobles / ligeros ──', items: [
+    { coolprop: 'Helium',  nombre: 'Helio (He)', M: 4.003, R: 2.077,  Cp: 5.193, Cv: 3.116, iapws: false },
+    { coolprop: 'Neon',    nombre: 'Neón (Ne)',  M: 20.18, R: 0.412,  Cp: 1.030, Cv: 0.618, iapws: false },
+    { coolprop: 'Krypton', nombre: 'Kriptón (Kr)', M: 83.798, R: 0.0992, Cp: 0.248, Cv: 0.149, iapws: false },
+    { coolprop: 'Xenon',   nombre: 'Xenón (Xe)', M: 131.29, R: 0.0633, Cp: 0.158, Cv: 0.095, iapws: false },
+    { coolprop: 'Hydrogen',nombre: 'Hidrógeno (H₂)', M: 2.016, R: 4.124, Cp: 14.30, Cv: 10.18, iapws: false },
+    { coolprop: 'Deuterium',nombre: 'Deuterio (D₂)', M: 4.028, R: 2.062, Cp: 5.20, Cv: 3.14, iapws: false },
+  ]},
+  { group: '── Refrigerantes HFC / HFO ──', items: [
+    { coolprop: 'R134a',  nombre: 'R-134a', M: 102.03, R: 0.08149, Cp: 0.9,  Cv: 0.82, iapws: false },
+    { coolprop: 'R410A',  nombre: 'R-410A', M: 72.58,  R: 0.1145,  Cp: 0.83, Cv: 0.72, iapws: false },
+    { coolprop: 'R32',    nombre: 'R-32',   M: 52.02,  R: 0.1598,  Cp: 0.85, Cv: 0.69, iapws: false },
+    { coolprop: 'R125',   nombre: 'R-125',  M: 120.02, R: 0.0693,  Cp: 0.79, Cv: 0.66, iapws: false },
+    { coolprop: 'R143a',  nombre: 'R-143a', M: 84.04,  R: 0.0989,  Cp: 0.87, Cv: 0.75, iapws: false },
+    { coolprop: 'R152A',  nombre: 'R-152a', M: 66.05,  R: 0.1259,  Cp: 1.00, Cv: 0.88, iapws: false },
+    { coolprop: 'R1234yf',nombre: 'R-1234yf (HFO)', M: 114.04, R: 0.0729, Cp: 0.86, Cv: 0.74, iapws: false },
+    { coolprop: 'R1234ze',nombre: 'R-1234ze (HFO)', M: 114.04, R: 0.0729, Cp: 0.85, Cv: 0.73, iapws: false },
+  ]},
+  { group: '── Refrigerantes históricos / naturales ──', items: [
+    { coolprop: 'R22',    nombre: 'R-22 (HCFC)', M: 86.47,  R: 0.0961,  Cp: 0.66, Cv: 0.56, iapws: false },
+    { coolprop: 'R12',    nombre: 'R-12 (CFC)',  M: 120.91, R: 0.0688,  Cp: 0.61, Cv: 0.54, iapws: false },
+    { coolprop: 'R290',   nombre: 'R-290 (Propano)', M: 44.10, R: 0.1885, Cp: 1.68, Cv: 1.49, iapws: false },
+    { coolprop: 'R600a',  nombre: 'R-600a (Isobutano)', M: 58.12, R: 0.1431, Cp: 1.60, Cv: 1.46, iapws: false },
+    { coolprop: 'Ammonia',nombre: 'Amoníaco (NH₃)',  M: 17.03, R: 0.4882, Cp: 2.19, Cv: 1.70, iapws: false },
+  ]},
+];
+
+/* ============================================================
+   CONTEXTOS DE EJEMPLOS
+   ============================================================ */
+const CONTEXTOS_C = {
+  1: { titulo: '📌 Compresor de H₂ verde (electrólisis)',
+       cuerpo: 'Planta de <b>hidrógeno verde</b>: H₂ a 1 bar y 25 °C se comprime a <b>200 bar</b> para almacenamiento o transporte. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>75 %</b>. Objetivo: calcular <b>T₂ real</b>, <b>Ẇ_real</b> y <b>Ṡ_gen</b> — clave para la viabilidad energética de la economía del H₂.' },
+  2: { titulo: '📌 Compresor de CO₂ en CCS (captura y almacenamiento)',
+       cuerpo: 'En una planta piloto de <b>CCS</b>, CO₂ capturado se comprime de 100 kPa a 1 MPa para inyección geológica. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>75 %</b>. Objetivo: cuantificar <b>Ẇ_real</b> y <b>Ṡ_gen</b> — las irreversibilidades se traducen en emisiones indirectas y penalizan el balance ambiental.' },
+  3: { titulo: '📌 Compresor de aire industrial (caso base)',
+       cuerpo: 'Compresor adiabático de <b>aire</b> de 100 kPa a 500 kPa. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>80 %</b>. Caso didáctico para comparar con los casos reales (H₂, CO₂) y observar el efecto de la relación de compresión.' }
+};
+
+const CONTEXTOS_T = {
+  1: { titulo: '📌 Tobera de vapor en turbina',
+       cuerpo: 'Vapor de agua entra a una tobera adiabática a <b>28,1 kgf/cm²</b> (≈2756 kPa) y <b>316 °C</b>, y sale a <b>18,3 kgf/cm²</b> (≈1795 kPa). Ṁ = <b>0,378 kg/s</b>. Objetivo: determinar <b>T₂</b>, <b>calidad o sobrecalentamiento</b> y el <b>área de salida</b> de la tobera.' },
+  2: { titulo: '📌 Tobera de CO₂ en CCS (expansión criogénica)',
+       cuerpo: 'En <b>Captura de Carbono</b>, CO₂ a <b>5 MPa</b> y <b>60 °C</b> se expande en una tobera adiabática hasta <b>1 MPa</b> para acondicionar el flujo antes de la etapa de licuefacción. Ṁ = <b>2 kg/s</b>, η_iso = <b>88 %</b>. Objetivo: <b>T₂</b>, <b>V₂</b> y <b>Ṡ_gen</b> como métrica de eficiencia exergética.' },
+  3: { titulo: '📌 Tobera de aire comprimido industrial (soplador)',
+       cuerpo: 'Aire comprimido a <b>500 kPa</b> y <b>100 °C</b> se expande en una tobera adiabática hasta <b>100 kPa</b> para generar un chorro de alta velocidad (limpieza industrial, soplado, atomización). Ṁ = <b>1 kg/s</b>, η_iso = <b>90 %</b>. Objetivo: <b>T₂</b>, <b>V₂</b> y <b>Ṡ_gen</b>. <i>Caso puro de tobera: P₂ &lt; P₁</i>.' },
+  4: { titulo: '📌 Difusor de aire (medición de flujo)',
+       cuerpo: 'Aire a <b>70 kPa</b> y <b>57 °C</b> con V₁ = <b>200 m/s</b> entra a un difusor adiabático y sale a <b>100 kPa</b>. Ṁ = <b>1 kg/s</b>, η_iso = <b>90 %</b>. Es un <b>difusor</b> (P₂ &gt; P₁): el fluido se desacelera y gana presión. Objetivo: <b>T₂</b>, <b>V₂</b> y balance de energía con Êc dominante.' }
+};
+
+/* ============================================================
+   CONVERSIÓN DE UNIDADES
+   ============================================================ */
+const U = {
+  SI:  { P: 'kPa',  T: '°C', m: 'kg/s', V: 'm/s', h: 'kJ/kg', s: 'kJ/(kg·K)', v: 'm³/kg' },
+  IMP: { P: 'psia', T: '°F', m: 'lbm/s', V: 'ft/s', h: 'Btu/lbm', s: 'Btu/(lbm·R)', v: 'ft³/lbm' }
+};
+function getUnitSys() { return document.getElementById('unitSystem').value; }
+function P_toSI(v, sys) { return sys === 'SI' ? v : v / 0.145038; }
+function P_fromSI(v, sys) { return sys === 'SI' ? v : v * 0.145038; }
+function T_toSI(v, sys) { return sys === 'SI' ? v + 273.15 : (v - 32) * 5/9 + 273.15; }
+function T_fromSI(v, sys) { return sys === 'SI' ? v - 273.15 : (v - 273.15) * 9/5 + 32; }
+function m_toSI(v, sys) { return sys === 'SI' ? v : v * 0.453592; }
+function m_fromSI(v, sys) { return sys === 'SI' ? v : v / 0.453592; }
+function V_toSI(v, sys) { return sys === 'SI' ? v : v * 0.3048; }
+function V_fromSI(v, sys) { return sys === 'SI' ? v : v / 0.3048; }
+function h_fromSI(v, sys) { return sys === 'SI' ? v : v / 2.326; }
+function s_fromSI(v, sys) { return sys === 'SI' ? v : v / 4.1868; }
+
+function fmt(x, sig = 5) {
+  if (x === null || x === undefined || isNaN(x)) return '—';
+  if (Math.abs(x) < 1e-12) return '0';
+  const d = sig - 1 - Math.floor(Math.log10(Math.abs(x)));
+  let s = x.toFixed(Math.max(0, Math.min(d, 9)));
+  return s.indexOf('.') >= 0 ? s.replace(/\.?0+$/, '') : s;
+}
+function n(x, sig) { return fmt(x, sig).replace('.', ','); }
+
+/* ============================================================
+   POBLAR SELECTS
+   ============================================================ */
+function poblarGases() {
+  ['cp_gas','tp_gas'].forEach(id => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '';
+    GASES.forEach(g => {
+      const og = document.createElement('optgroup');
+      og.label = g.group;
+      g.items.forEach(it => {
+        const o = document.createElement('option');
+        o.value = it.coolprop;
+        o.textContent = it.nombre;
+        o.dataset.M = it.M; o.dataset.R = it.R;
+        o.dataset.Cp = it.Cp; o.dataset.Cv = it.Cv;
+        o.dataset.iapws = it.iapws;
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+  });
+  document.getElementById('cp_gas').addEventListener('change', () => actualizarProps('cp'));
+  document.getElementById('tp_gas').addEventListener('change', () => actualizarProps('tp'));
+  ['cp_model','tp_model'].forEach(id => {
+    document.getElementById(id).addEventListener('change', function() {
+      const pref = id.split('_')[0];
+      document.getElementById(pref + '_ideal_opts').style.display = this.value === 'ideal' ? 'flex' : 'none';
+      actualizarProps(pref);
+    });
+  });
+  actualizarProps('cp');
+  actualizarProps('tp');
+}
+
+function actualizarProps(pref) {
+  const sel = document.getElementById(pref + '_gas');
+  const opt = sel.options[sel.selectedIndex];
+  if (!opt) return;
+  const M = parseFloat(opt.dataset.M), R = parseFloat(opt.dataset.R);
+  const Cp = parseFloat(opt.dataset.Cp), Cv = parseFloat(opt.dataset.Cv);
+  const gamma = Cp / Cv;
+  document.getElementById(pref + '_cp').value = fmt(Cp, 5).replace('.', ',');
+  document.getElementById(pref + '_cv').value = fmt(Cv, 5).replace('.', ',');
+  document.getElementById(pref + '_R').value  = fmt(R, 5).replace('.', ',');
+  document.getElementById(pref + '_props').innerHTML =
+    `<span>M: <b>${n(M,6)} g/mol</b></span>` +
+    `<span>R: <b>${n(R,5)} kJ/(kg·K)</b></span>` +
+    `<span>Cp: <b>${n(Cp,5)} kJ/(kg·K)</b></span>` +
+    `<span>Cv: <b>${n(Cv,5)} kJ/(kg·K)</b></span>` +
+    `<span>γ: <b>${n(gamma,5)}</b></span>` +
+    `<span>Modelo: <b>${document.getElementById(pref + '_model').value}</b></span>`;
+}
+
+/* ============================================================
+   PYODIDE (IAPWS-IF97)
+   ============================================================ */
+function setBanner(state, html) {
+  const b = document.getElementById('pyodide-banner');
+  b.className = state;
+  b.innerHTML = html;
+}
+
+async function initPyodide() {
+  try {
+    setBanner('', '<span class="spinner"></span><span>Cargando Pyodide…</span>');
+    pyodide = await loadPyodide();
+    setBanner('', '<span class="spinner"></span><span>Cargando numpy + scipy…</span>');
+    await pyodide.loadPackage(['numpy', 'scipy']);
+    setBanner('', '<span class="spinner"></span><span>Instalando iapws…</span>');
+    await pyodide.loadPackage('micropip');
+    const micropip = pyodide.pyimport('micropip');
+    const iapwsPromise = micropip.install('iapws');
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Timeout iapws (>45 s)')), 45000)
+    );
+    await Promise.race([iapwsPromise, timeoutPromise]);
+
+    await pyodide.runPythonAsync(`
+import json
+from iapws import IAPWS97
+
+def _fase_agua(st):
+    if st.x is not None:
+        if st.x <= 1e-9: return 'Líquido saturado'
+        if st.x >= 1-1e-9: return 'Vapor saturado'
+        return 'Mezcla (x=%.3f)' % st.x
+    if st.P >= 22.064:
+        return 'Supercrítico' if st.T >= 647.096 else 'Líquido comprimido'
+    try:
+        sat = IAPWS97(P=st.P, x=0)
+        return 'Vapor sobrecalentado' if st.T > sat.T else 'Líquido comprimido'
+    except Exception:
+        return '—'
+
+def estado_agua(kwargs_json):
+    try:
+        kw = json.loads(kwargs_json)
+        kw = {k: float(v) for k, v in kw.items()}
+        if 'P' in kw: kw['P'] = kw['P']/1000.0
+        st = IAPWS97(**kw)
+        if st.h is None: return json.dumps({'error':'Fuera de rango IAPWS-IF97'})
+        return json.dumps({
+            'ok': True, 'P': st.P*1000.0, 'T': st.T,
+            'h': st.h, 's': st.s, 'v': st.v, 'u': st.u,
+            'fase': _fase_agua(st), 'x': st.x
+        })
+    except Exception as e:
+        return json.dumps({'error': str(e)})
+`);
+    pyodideListo = true;
+    setBanner('ready', '✅ IAPWS-IF97 listo. CoolProp HTTP para otros gases.');
+  } catch (e) {
+    console.error(e);
+    setBanner('partial', '⚠️ IAPWS no disponible (' + e.message + '). Se usará CoolProp HTTP para todo.');
+  }
+}
+
+async function estadoAguaIAPWS(kwargs) {
+  if (!pyodideListo) throw new Error('IAPWS no disponible');
+  const jsonStr = JSON.stringify(kwargs);
+  const resJson = await pyodide.runPythonAsync(`estado_agua(${JSON.stringify(jsonStr)})`);
+  const r = JSON.parse(resJson);
+  if (r.error) throw new Error(r.error);
+  return r;
+}
+
+async function estadoCoolPropHTTP(fluid, kwargs) {
+  const params = new URLSearchParams();
+  const pairs = Object.entries(kwargs);
+  if (pairs.length < 2) throw new Error('CoolProp HTTP requiere 2 propiedades');
+  const mapKey = { P: 'P', T: 'T', h: 'H', s: 'S' };
+  const convert = { P: v => v * 1000, T: v => v, h: v => v * 1000, s: v => v * 1000 };
+  pairs.forEach(([k, v]) => {
+    if (!mapKey[k]) return;
+    params.append(mapKey[k], convert[k](v));
+  });
+  params.append('backend', 'HEOS');
+  ['T','P','H','S','D','U','Q'].forEach(out => params.append('output', out));
+  const url = `http://www.coolprop.dreamhosters.com:8080/json/props?${params.toString()}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('CoolProp HTTP ' + resp.status);
+  const arr = await resp.json();
+  const v = arr[0];
+  const get = (k) => v[k] ? v[k][0] : null;
+  const T_K = get('T'), P_Pa = get('P'), H_Jkg = get('H'), S_JkgK = get('S');
+  const D_kgm3 = get('D'), U_Jkg = get('U'), Q = get('Q');
+  if (T_K === null || P_Pa === null) throw new Error('CoolProp HTTP: respuesta incompleta');
+  let fase = 'Gas real';
+  if (Q !== null && Q >= 0 && Q <= 1) {
+    if (Q <= 1e-9) fase = 'Líquido saturado';
+    else if (Q >= 1-1e-9) fase = 'Vapor saturado';
+    else fase = `Mezcla (x=${Q.toFixed(3)})`;
+  }
+  return { ok: true, P: P_Pa/1000, T: T_K, h: H_Jkg/1000, s: S_JkgK/1000,
+           v: 1.0/D_kgm3, u: U_Jkg/1000, fase, x: Q };
+}
+
+async function calcularEstado(fluid, kwargs, esAgua) {
+  if (esAgua && pyodideListo) {
+    try { return await estadoAguaIAPWS(kwargs); }
+    catch (e) { console.warn('IAPWS falló, usando HTTP:', e); }
+  }
+  return await estadoCoolPropHTTP(fluid, kwargs);
+}
+
+/* ============================================================
+   GAS IDEAL
+   ============================================================ */
+function estadoIdeal(P_kPa, T_K, R, Cp, Cv) {
+  if (T_K <= 0) throw new Error('Temperatura absoluta ≤ 0 K (revisar η o datos de entrada)');
+  const v = R * T_K / P_kPa;
+  const h = Cp * T_K;
+  const u = Cv * T_K;
+  const T0 = 273.15, P0 = 101.325;
+  const s = Cp * Math.log(T_K / T0) - R * Math.log(P_kPa / P0);
+  return { P: P_kPa, T: T_K, h, s, v, u, x: null, fase: 'Gas ideal' };
+}
+function resolverEstadoIdeal(d, R, Cp, Cv) {
+  const keys = Object.keys(d).filter(k => d[k] !== null && d[k] !== undefined && !isNaN(d[k]));
+  if (keys.length < 2) throw new Error('Ingrese 2 propiedades independientes');
+  if (keys.length > 2) throw new Error('Ingresó ' + keys.length + ' propiedades; deje solo 2');
+  if (d.P === undefined || d.T === undefined) throw new Error('Gas ideal: se requieren P y T');
+  return estadoIdeal(d.P, d.T, R, Cp, Cv);
+}
+
+/* ============================================================
+   LECTURA DE PANELES
+   ============================================================ */
+function leerPanel(panelId, sys) {
+  const d = {};
+  for (const k of ['P','T']) {
+    const el = document.getElementById(panelId + '_' + k);
+    if (!el) continue;
+    const val = el.value.trim().replace(',', '.');
+    if (val === '') continue;
+    let num = parseFloat(val);
+    if (isNaN(num)) throw new Error('Valor no numérico en ' + panelId + '_' + k);
+    if (k === 'P') { num = P_toSI(num, sys); if (num <= 0) throw new Error('P > 0'); }
+    else if (k === 'T') { num = T_toSI(num, sys); if (num <= 0) throw new Error('T > 0 K'); }
+    d[k] = num;
+  }
+  return d;
+}
+
+function leerDatos(pref, sys) {
+  const in1 = leerPanel(pref + '1', sys);
+  const in2 = leerPanel(pref + '2', sys);
+  const g = (id) => { const el = document.getElementById(id); if (!el) return null; const v = el.value.trim(); return v === '' ? null : parseFloat(v.replace(',', '.')); };
+  const m1 = g(pref + '1_m'), m2 = g(pref + '2_m');
+  const v1 = g(pref + '1_v'), v2 = g(pref + '2_v');
+  const eta = g(pref + '_eta');
+  const sel = document.getElementById(pref + '_gas');
+  const opt = sel.options[sel.selectedIndex];
+  const gas = { coolprop: opt.value, nombre: opt.textContent, M: parseFloat(opt.dataset.M),
+                R: parseFloat(opt.dataset.R), Cp: parseFloat(opt.dataset.Cp),
+                Cv: parseFloat(opt.dataset.Cv), iapws: opt.dataset.iapws === 'true' };
+  const modelo = document.getElementById(pref + '_model').value;
+  return { in1, in2, m1, m2, v1, v2, eta, gas, modelo, sys,
+           R: g(pref + '_R'), Cp: g(pref + '_cp'), Cv: g(pref + '_cv') };
+}
+
+/* ============================================================
+   COMPLETAR ESTADO
+   ============================================================ */
+async function completarEstadoC(panelId) {
+  if (panelId === 'cp1') await _completarEstadoEntrada('cp1', 'cp');
+  else await _resolverYMostrar('cp', 'energia');
+}
+async function completarEstadoT(panelId) {
+  if (panelId === 'tp1') await _completarEstadoEntrada('tp1', 'tp');
+  else await _resolverYMostrar('tp', 'energia');
+}
+async function _completarEstadoEntrada(panelId, pref) {
+  const sys = getUnitSys();
+  try {
+    const d = leerPanel(panelId, sys);
+    if (Object.keys(d).length < 2) throw new Error('Ingrese 2 propiedades (P y T) en el panel de entrada');
+    const sel = document.getElementById(pref + '_gas');
+    const opt = sel.options[sel.selectedIndex];
+    const modelo = document.getElementById(pref + '_model').value;
+    let st;
+    if (modelo === 'ideal') {
+      const R = parseFloat(document.getElementById(pref + '_R').value.replace(',', '.'));
+      const Cp = parseFloat(document.getElementById(pref + '_cp').value.replace(',', '.'));
+      const Cv = parseFloat(document.getElementById(pref + '_cv').value.replace(',', '.'));
+      st = resolverEstadoIdeal(d, R, Cp, Cv);
+    } else {
+      st = await calcularEstado(opt.value, d, opt.dataset.iapws === 'true');
+    }
+    escribirPanel(panelId, st, sys, pref);
+  } catch (e) { mostrarError(pref, e.message); }
+}
+async function _resolverYMostrar(pref, tipo) {
+  if (pref === 'cp') await resolverCompresor(tipo);
+  else await resolverTobera(tipo);
+}
+function escribirPanel(panelId, st, sys, pref) {
+  const elP = document.getElementById(panelId + '_P');
+  const elT = document.getElementById(panelId + '_T');
+  if (elP) { elP.value = fmt(P_fromSI(st.P, sys), 6).replace('.', ','); elP.classList.add('calculado'); }
+  if (elT) { elT.value = fmt(T_fromSI(st.T, sys), 6).replace('.', ','); elT.classList.add('calculado'); }
+  document.getElementById(panelId + '_fase').textContent = 'Fase: ' + (st.fase || '—');
+}
+
+/* ============================================================
+   RESOLVER COMPRESOR  (convención: h2 > h1, W > 0)
+   ============================================================ */
+async function resolverCompresor(tipo) {
+  const cont = document.getElementById('cp_resultados');
+  cont.innerHTML = '';
+  try {
+    const d = leerDatos('cp', getUnitSys());
+    const ctx = await calcularCompresor(d);
+    ultimoContexto.compresores = ctx;
+    dibujarDiagramas(ctx);
+    mostrarResultadosCompresor(ctx, cont, tipo);
+    _escribirSalida('cp2', ctx.st2, ctx.sys);
+    const elEta = document.getElementById('cp_eta');
+    if (elEta && !elEta.value.trim()) elEta.value = fmt(ctx.eta*100, 5).replace('.', ',');
+  } catch (e) {
+    mostrarError('cp', e.message);
+    console.error(e);
+  }
+}
+
+function _escribirSalida(panelId, st, sys) {
+  const elP = document.getElementById(panelId + '_P');
+  const elT = document.getElementById(panelId + '_T');
+  if (elP) { elP.value = fmt(P_fromSI(st.P, sys), 6).replace('.', ','); elP.classList.add('calculado'); }
+  if (elT) { elT.value = fmt(T_fromSI(st.T, sys), 6).replace('.', ','); elT.classList.add('calculado'); }
+  document.getElementById(panelId + '_fase').textContent = 'Fase: ' + (st.fase || '—');
+}
+
+async function calcularCompresor(d) {
+  if (Object.keys(d.in1).length < 2) throw new Error('Estado 1: ingrese al menos P₁ y T₁');
+  if (!d.in2.P) throw new Error('Estado 2: ingrese P₂');
+
+  let st1, st2s;
+  if (d.modelo === 'ideal') {
+    if (d.R === null || d.Cp === null || d.Cv === null) throw new Error('Complete R, Cp y Cv');
+    if (d.Cv <= 0 || d.Cp <= d.Cv) throw new Error('Cp > Cv > 0 requerido');
+    st1 = resolverEstadoIdeal(d.in1, d.R, d.Cp, d.Cv);
+    const gamma = d.Cp / d.Cv;
+    const T2s = st1.T * Math.pow(d.in2.P / st1.P, (gamma - 1) / gamma);
+    st2s = estadoIdeal(d.in2.P, T2s, d.R, d.Cp, d.Cv);
+  } else {
+    st1 = await calcularEstado(d.gas.coolprop, d.in1, d.gas.iapws);
+    st2s = await calcularEstado(d.gas.coolprop, { P: d.in2.P, s: st1.s }, d.gas.iapws);
+  }
+
+  const eta = d.eta !== null ? d.eta / 100 : 0.8;
+  if (eta <= 0 || eta > 1) throw new Error('η debe estar entre 0 y 100 %');
+
+  // COMPRESOR: h2 > h1, w_iso = h2s − h1 > 0
+  const w_iso = st2s.h - st1.h;
+  if (w_iso < 0) throw new Error('P₂ < P₁: no es compresión');
+  const w_real = w_iso / eta;
+  const h2 = st1.h + w_real;
+
+  let st2;
+  if (d.modelo === 'ideal') {
+    const T2 = st1.T + w_real / d.Cp;
+    if (T2 <= 0) throw new Error('T₂ ≤ 0 K. η o relación de compresión fuera de rango');
+    st2 = estadoIdeal(d.in2.P, T2, d.R, d.Cp, d.Cv);
+  } else {
+    st2 = await calcularEstado(d.gas.coolprop, { P: d.in2.P, h: h2 }, d.gas.iapws);
+  }
+
+  let m = d.m1 !== null ? m_toSI(d.m1, d.sys) : (d.m2 !== null ? m_toSI(d.m2, d.sys) : null);
+  let W = null;
+  if (m !== null) W = m * w_real;
+
+  const sgen_esp = st2.s - st1.s;
+  const Sgen = m !== null ? m * sgen_esp : null;
+
+  return { st1, st2, st2s, w_iso, w_real, eta, m, W, sgen_esp, Sgen,
+           gas: d.gas, sys: d.sys, modelo: d.modelo,
+           R: d.R, Cp: d.Cp, Cv: d.Cv, equipo: 'compresor' };
+}
+
+/* ============================================================
+   RESOLVER TOBERA / DIFUSOR
+   ============================================================ */
+async function resolverTobera(tipo) {
+  const cont = document.getElementById('tp_resultados');
+  cont.innerHTML = '';
+  try {
+    const d = leerDatos('tp', getUnitSys());
+    const ctx = await calcularTobera(d);
+    ultimoContexto.toberas = ctx;
+    dibujarDiagramas(ctx);
+    mostrarResultadosTobera(ctx, cont, tipo);
+    _escribirSalida('tp2', ctx.st2, ctx.sys);
+    const elV2 = document.getElementById('tp2_v');
+    if (elV2) { elV2.value = fmt(V_fromSI(ctx.v2, ctx.sys), 6).replace('.', ','); elV2.classList.add('calculado'); }
+    const elEta = document.getElementById('tp_eta');
+    if (elEta && !elEta.value.trim()) elEta.value = fmt(ctx.eta*100, 5).replace('.', ',');
+  } catch (e) {
+    mostrarError('tp', e.message);
+    console.error(e);
+  }
+}
+
+async function calcularTobera(d) {
+  if (Object.keys(d.in1).length < 2) throw new Error('Estado 1: ingrese al menos P₁ y T₁');
+  if (!d.in2.P) throw new Error('Estado 2: ingrese P₂');
+  if (Math.abs(d.in2.P - d.in1.P) < 1e-6) throw new Error('P₂ = P₁: no hay cambio de presión');
+
+  const esDifusor = d.in2.P > d.in1.P;
+
+  let st1, st2s;
+  if (d.modelo === 'ideal') {
+    if (d.R === null || d.Cp === null || d.Cv === null) throw new Error('Complete R, Cp y Cv');
+    if (d.Cv <= 0 || d.Cp <= d.Cv) throw new Error('Cp > Cv > 0 requerido');
+    st1 = resolverEstadoIdeal(d.in1, d.R, d.Cp, d.Cv);
+    const gamma = d.Cp / d.Cv;
+    const T2s = st1.T * Math.pow(d.in2.P / st1.P, (gamma - 1) / gamma);
+    st2s = estadoIdeal(d.in2.P, T2s, d.R, d.Cp, d.Cv);
+  } else {
+    st1 = await calcularEstado(d.gas.coolprop, d.in1, d.gas.iapws);
+    st2s = await calcularEstado(d.gas.coolprop, { P: d.in2.P, s: st1.s }, d.gas.iapws);
+  }
+
+  const eta = d.eta !== null ? d.eta / 100 : (esDifusor ? 0.85 : 0.9);
+  if (eta <= 0 || eta > 1) throw new Error('η debe estar entre 0 y 100 %');
+
+  let w_iso, w_real, h_salida_real, T2_ideal;
+  if (esDifusor) {
+    // DIFUSOR: h2 > h1 ; η = (h2s − h1)/(h2 − h1) ⇒ h2 = h1 + (h2s−h1)/η
+    w_iso = st2s.h - st1.h;
+    w_real = w_iso / eta;
+    h_salida_real = st1.h + w_real;
+    T2_ideal = st1.T + w_real / d.Cp;
+  } else {
+    // TOBERA: h2 < h1 ; η = (h1 − h2)/(h1 − h2s) ⇒ h2 = h1 − η(h1−h2s)
+    w_iso = st1.h - st2s.h;
+    w_real = eta * w_iso;
+    h_salida_real = st1.h - w_real;
+    T2_ideal = st1.T - eta * (st1.T - st2s.T);
+  }
+  if (T2_ideal <= 0) throw new Error('T₂ ≤ 0 K (η o relación de presión fuera de rango)');
+
+  let st2;
+  if (d.modelo === 'ideal') {
+    st2 = estadoIdeal(d.in2.P, T2_ideal, d.R, d.Cp, d.Cv);
+  } else {
+    st2 = await calcularEstado(d.gas.coolprop, { P: d.in2.P, h: h_salida_real }, d.gas.iapws);
+  }
+
+  const v1 = d.v1 !== null ? V_toSI(d.v1, d.sys) : 0;
+  const dh = (st1.h - st2.h) * 1000;
+  const v2_sq = v1 * v1 + 2 * dh;
+  const v2 = v2_sq > 0 ? Math.sqrt(v2_sq) : 0;
+
+  let m = d.m1 !== null ? m_toSI(d.m1, d.sys) : (d.m2 !== null ? m_toSI(d.m2, d.sys) : null);
+  const sgen_esp = st2.s - st1.s;
+  const Sgen = m !== null ? m * sgen_esp : null;
+
+  return {
+    st1, st2, st2s, w_iso, w_real, eta, m,
+    W: m !== null ? m * w_real : null,
+    sgen_esp, Sgen, v1, v2,
+    gas: d.gas, sys: d.sys, modelo: d.modelo,
+    R: d.R, Cp: d.Cp, Cv: d.Cv,
+    equipo: esDifusor ? 'difusor' : 'tobera'
+  };
+}
+
+/* ============================================================
+   MOSTRAR RESULTADOS
+   ============================================================ */
+function mostrarResultadosCompresor(ctx, cont, tipo) {
+  const { st1, st2, st2s, w_iso, w_real, eta, m, W, sgen_esp, Sgen, gas, sys } = ctx;
+  const uP = U[sys].P, uT = U[sys].T, uh = U[sys].h, us = U[sys].s, um = U[sys].m;
+  let html = '';
+  if (tipo === 'todos' || tipo === 'masa') {
+    html += `<span class="tag-h">═══ BALANCE DE MASA ═══</span>`;
+    html += `Sistema: Compresor, abierto, estacionario, 1E/1S\n`;
+    html += `(dM/dt)sist = 0 = Σ Ṁk  →  0 = Ṁ₁ − Ṁ₂\n`;
+    if (m !== null) html += `<span class="tag-res">Ṁ₁ = Ṁ₂ = Ṁ = ${n(m_fromSI(m, sys))} ${um}</span>\n\n`;
+    else html += `Ṁ₁ = Ṁ₂ = Ṁ   (ingrese Ṁ)\n\n`;
+  }
+  if (tipo === 'todos' || tipo === 'energia') {
+    html += `<span class="tag-h">═══ BALANCE DE ENERGÍA ═══</span>`;
+    html += `(dU/dt)sist = 0 = Q̇ − Ẇ + Σ Ṁk(Ĥ+Êc+Êp)k\n`;
+    html += `Compresor adiabático (Q̇=0), ΔÊc≈0, ΔÊp≈0:\n`;
+    html += `  0 = −Ẇ + Ṁ₁Ĥ₁ − Ṁ₂Ĥ₂  →  Ẇ = Ṁ(Ĥ₂ − Ĥ₁)\n\n`;
+    html += `<span class="tag-sub">① Entrada (${gas.nombre}):</span>\n`;
+    html += `  P₁ = ${n(P_fromSI(st1.P, sys))} ${uP}   T₁ = ${n(T_fromSI(st1.T, sys))} ${uT}   Fase: ${st1.fase}\n`;
+    html += `  h₁ = ${n(h_fromSI(st1.h, sys))} ${uh}   s₁ = ${n(s_fromSI(st1.s, sys))} ${us}\n\n`;
+    html += `<span class="tag-sub">②s Salida isoentrópica:</span>\n`;
+    html += `  P₂s = ${n(P_fromSI(st2s.P, sys))} ${uP}   T₂s = ${n(T_fromSI(st2s.T, sys))} ${uT}\n`;
+    html += `  h₂s = ${n(h_fromSI(st2s.h, sys))} ${uh}\n`;
+    html += `  Ẇ_iso = Ṁ(h₂s − h₁) = ${n(h_fromSI(w_iso, sys))} ${uh} por unidad de masa\n\n`;
+    html += `<span class="tag-sub">② Salida real (η = ${n(eta*100, 4)} %):</span>\n`;
+    html += `  P₂ = ${n(P_fromSI(st2.P, sys))} ${uP}   T₂ = ${n(T_fromSI(st2.T, sys))} ${uT}   Fase: ${st2.fase}\n`;
+    html += `  h₂ = ${n(h_fromSI(st2.h, sys))} ${uh}   s₂ = ${n(s_fromSI(st2.s, sys))} ${us}\n`;
+    html += `  Ẇ_real = Ẇ_iso/η = ${n(h_fromSI(w_real, sys))} ${uh}\n`;
+    if (m !== null) html += `<span class="tag-res">Ẇ_real = ${n(h_fromSI(W, sys))} kW   (Ṁ = ${n(m_fromSI(m, sys))} ${um})</span>\n\n`;
+    else html += `ⓘ Ingrese Ṁ para calcular potencia\n\n`;
+  }
+  if (tipo === 'todos' || tipo === 'entropia') {
+    html += `<span class="tag-h">═══ BALANCE DE ENTROPÍA ═══</span>`;
+    html += `(dS/dt)sist = 0 = Σ(ṀŜ)k + Q̇/T₀ + Ṡgen\n`;
+    html += `Compresor adiabático: Ṡgen = Ṁ(Ŝ₂ − Ŝ₁)\n\n`;
+    html += `Ŝ₁ = ${n(s_fromSI(st1.s, sys))} ${us}\n`;
+    html += `Ŝ₂ = ${n(s_fromSI(st2.s, sys))} ${us}\n`;
+    html += `Ŝ₂ − Ŝ₁ = ${n(s_fromSI(sgen_esp, sys), 5)} ${us}\n`;
+    if (Sgen !== null) html += `<span class="tag-res">Ṡgen = ${n(sgen_esp * m_fromSI(m, sys), 5)} kW/K</span>\n`;
+    else html += `Ṡgen = Ṁ · ${n(s_fromSI(sgen_esp, sys), 5)} ${us}   (ingrese Ṁ)\n`;
+    html += `${sgen_esp > 1e-9 ? '✔ Ṡgen > 0 → proceso irreversible' : '⚠ Revisar datos'}\n`;
+  }
+  cont.innerHTML = html;
+}
+
+function mostrarResultadosTobera(ctx, cont, tipo) {
+  const { st1, st2, st2s, w_iso, w_real, eta, m, sgen_esp, Sgen, v1, v2, gas, sys, equipo } = ctx;
+  const uP = U[sys].P, uT = U[sys].T, uh = U[sys].h, us = U[sys].s, uV = U[sys].V, um = U[sys].m;
+  const esDifusor = equipo === 'difusor';
+  let html = '';
+
+  html += esDifusor
+    ? `<span class="tag-info">ⓘ Detectado como DIFUSOR (P₂ > P₁): el fluido gana presión y se desacelera.</span>\n\n`
+    : `<span class="tag-info">ⓘ Detectado como TOBERA (P₂ < P₁): el fluido pierde presión y se acelera.</span>\n\n`;
+
+  if (tipo === 'todos' || tipo === 'masa') {
+    html += `<span class="tag-h">═══ BALANCE DE MASA ═══</span>`;
+    html += `Sistema: ${esDifusor ? 'Difusor' : 'Tobera'}, abierto, estacionario, 1E/1S\n`;
+    html += `0 = Ṁ₁ − Ṁ₂\n`;
+    if (m !== null) html += `<span class="tag-res">Ṁ₁ = Ṁ₂ = Ṁ = ${n(m_fromSI(m, sys))} ${um}</span>\n\n`;
+    else html += `Ṁ₁ = Ṁ₂ = Ṁ\n\n`;
+  }
+  if (tipo === 'todos' || tipo === 'energia') {
+    html += `<span class="tag-h">═══ BALANCE DE ENERGÍA ═══</span>`;
+    html += `(dU/dt)sist = 0 = Q̇ − Ẇ + ΣṀk(Ĥ+Êc+Êp)k\n`;
+    html += `${esDifusor ? 'Difusor' : 'Tobera'} adiabático (Q̇=0), Ẇ=0, ΔÊp≈0:\n`;
+    html += `  0 = Ṁ[Ĥ₁−Ĥ₂ + Êc₁−Êc₂]  →  Ĥ₁−Ĥ₂ = Êc₂−Êc₁\n\n`;
+    html += `<span class="tag-sub">① Entrada (${gas.nombre}):</span>\n`;
+    html += `  P₁ = ${n(P_fromSI(st1.P, sys))} ${uP}   T₁ = ${n(T_fromSI(st1.T, sys))} ${uT}   Fase: ${st1.fase}\n`;
+    html += `  h₁ = ${n(h_fromSI(st1.h, sys))} ${uh}   V₁ = ${n(V_fromSI(v1, sys))} ${uV}\n\n`;
+    html += `<span class="tag-sub">②s Salida isoentrópica:</span>\n`;
+    html += `  P₂s = ${n(P_fromSI(st2s.P, sys))} ${uP}   T₂s = ${n(T_fromSI(st2s.T, sys))} ${uT}\n`;
+    html += `  h₂s = ${n(h_fromSI(st2s.h, sys))} ${uh}   |Δh_iso| = ${n(h_fromSI(Math.abs(w_iso), sys))} ${uh}\n\n`;
+    html += `<span class="tag-sub">② Salida real (η = ${n(eta*100, 4)} %):</span>\n`;
+    html += `  P₂ = ${n(P_fromSI(st2.P, sys))} ${uP}   T₂ = ${n(T_fromSI(st2.T, sys))} ${uT}   Fase: ${st2.fase}\n`;
+    html += `  h₂ = ${n(h_fromSI(st2.h, sys))} ${uh}   V₂ = ${n(V_fromSI(v2, sys))} ${uV}\n`;
+    html += esDifusor
+      ? `  Δh_real = Δh_iso/η = ${n(h_fromSI(w_real, sys))} ${uh}\n`
+      : `  Δh_real = η·Δh_iso = ${n(h_fromSI(w_real, sys))} ${uh}\n`;
+    html += `<span class="tag-res">V₂ = ${n(V_fromSI(v2, sys))} ${uV}  (de V₂ = √(V₁² + 2(h₁−h₂)))</span>\n\n`;
+  }
+  if (tipo === 'todos' || tipo === 'entropia') {
+    html += `<span class="tag-h">═══ BALANCE DE ENTROPÍA ═══</span>`;
+    html += `(dS/dt)sist = 0 = Σ(ṀŜ)k + Q̇/T₀ + Ṡgen\n`;
+    html += `Adiabático: Ṡgen = Ṁ(Ŝ₂ − Ŝ₁)\n\n`;
+    html += `Ŝ₁ = ${n(s_fromSI(st1.s, sys))} ${us}\n`;
+    html += `Ŝ₂ = ${n(s_fromSI(st2.s, sys))} ${us}\n`;
+    html += `Ŝ₂ − Ŝ₁ = ${n(s_fromSI(sgen_esp, sys), 5)} ${us}\n`;
+    if (Sgen !== null) html += `<span class="tag-res">Ṡgen = ${n(sgen_esp * m_fromSI(m, sys), 5)} kW/K</span>\n`;
+    else html += `Ṡgen = Ṁ · ${n(s_fromSI(sgen_esp, sys), 5)} ${us}\n`;
+    html += `${sgen_esp > 1e-9 ? '✔ Ṡgen > 0 → proceso irreversible' : '⚠ Revisar datos'}\n`;
+  }
+  cont.innerHTML = html;
+}
+
+function mostrarError(pref, msg) {
+  const cont = document.getElementById(pref + '_resultados');
+  if (!cont) return;
+  const div = document.createElement('div');
+  div.className = 'tag-warn';
+  div.textContent = '✖ ' + msg;
+  cont.appendChild(div);
+}
+
+/* ============================================================
+   CONTEXTO
+   ============================================================ */
+function mostrarContexto(pref, ctx) {
+  const box = document.getElementById(pref + '_contexto');
+  if (!box) return;
+  if (!ctx) { box.classList.remove('visible'); return; }
+  document.getElementById(pref + '_ctx_titulo').textContent = ctx.titulo;
+  document.getElementById(pref + '_ctx_cuerpo').innerHTML = ctx.cuerpo;
+  box.classList.add('visible');
+}
+
+/* ============================================================
+   DIAGRAMAS (Canvas 2D)
+   ============================================================ */
+function _ajustarCanvas(cv) {
+  if (!cv) return;
+  const dpr = window.devicePixelRatio || 1;
+  let anchoCSS = cv.parentElement ? cv.parentElement.clientWidth : cv.clientWidth;
+  if (anchoCSS < 50) anchoCSS = 460;
+  const alto = Math.round(anchoCSS * 0.62);
+  cv.style.width = anchoCSS + 'px';
+  cv.style.height = alto + 'px';
+  cv.width = Math.round(anchoCSS * dpr);
+  cv.height = Math.round(alto * dpr);
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, W: anchoCSS, H: alto };
+}
+function _escala(min, max, padFrac = 0.06) {
+  if (!isFinite(min) || !isFinite(max)) { min = 0; max = 1; }
+  if (max === min) { max += 1; min -= 1; }
+  const pad = (max - min) * padFrac;
+  return { min: min - pad, max: max + pad };
+}
+function _mapX(v, esc, m, pw) { return m.l + pw * (v - esc.min) / (esc.max - esc.min); }
+function _mapY(v, esc, m, ph) { return m.t + ph * (1 - (v - esc.min) / (esc.max - esc.min)); }
+function _dibujarMarco(ctx, W, H, escX, escY, xLabel, yLabel) {
+  const m = { l: 52, r: 12, t: 12, b: 34 };
+  const pw = W - m.l - m.r, ph = H - m.t - m.b;
+  ctx.fillStyle = '#fff'; ctx.fillRect(m.l, m.t, pw, ph);
+  ctx.strokeStyle = '#e8eef2'; ctx.lineWidth = 1;
+  for (let i = 1; i < 8; i++) {
+    const gx = m.l + pw * i / 8;
+    ctx.beginPath(); ctx.moveTo(gx, m.t); ctx.lineTo(gx, m.t + ph); ctx.stroke();
+  }
+  for (let j = 1; j < 6; j++) {
+    const gy = m.t + ph * j / 6;
+    ctx.beginPath(); ctx.moveTo(m.l, gy); ctx.lineTo(m.l + pw, gy); ctx.stroke();
+  }
+  ctx.strokeStyle = '#90a4ae'; ctx.lineWidth = 1.2;
+  ctx.strokeRect(m.l, m.t, pw, ph);
+  ctx.fillStyle = '#37474f'; ctx.font = '10px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  const rX = escX.max - escX.min;
+  for (let k = 0; k <= 5; k++) {
+    const vx = escX.min + rX * k / 5;
+    const px = m.l + pw * k / 5;
+    ctx.beginPath(); ctx.strokeStyle = '#90a4ae'; ctx.moveTo(px, m.t + ph); ctx.lineTo(px, m.t + ph + 3); ctx.stroke();
+    ctx.fillText(fmt(vx, 4), px, m.t + ph + 5);
+  }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  const rY = escY.max - escY.min;
+  for (let l = 0; l <= 5; l++) {
+    const vy = escY.min + rY * l / 5;
+    const py = m.t + ph * (1 - l / 5);
+    ctx.beginPath(); ctx.strokeStyle = '#90a4ae'; ctx.moveTo(m.l - 3, py); ctx.lineTo(m.l, py); ctx.stroke();
+    ctx.fillText(fmt(vy, 4), m.l - 5, py);
+  }
+  ctx.fillStyle = '#0d47a1'; ctx.font = 'bold 10.5px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(xLabel, m.l + pw / 2, H - 5);
+  ctx.save(); ctx.translate(11, m.t + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(yLabel, 0, 0);
+  ctx.restore();
+  return m;
+}
+function _linea(ctx, pts, mapXf, mapYf, color, dash, width) {
+  ctx.beginPath();
+  let started = false;
+  for (const [x, y] of pts) {
+    if (!isFinite(x) || !isFinite(y)) { started = false; continue; }
+    const X = mapXf(x), Y = mapYf(y);
+    if (!isFinite(X) || !isFinite(Y)) { started = false; continue; }
+    if (!started) { ctx.moveTo(X, Y); started = true; } else ctx.lineTo(X, Y);
+  }
+  ctx.strokeStyle = color; ctx.lineWidth = width || 1.8;
+  ctx.setLineDash(dash || []);
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.stroke(); ctx.setLineDash([]);
+}
+function _punto(ctx, x, y, mapXf, mapYf, color) {
+  if (!isFinite(x) || !isFinite(y)) return;
+  const X = mapXf(x), Y = mapYf(y);
+  if (!isFinite(X) || !isFinite(Y)) return;
+  ctx.beginPath(); ctx.arc(X, Y, 4.5, 0, 2 * Math.PI);
+  ctx.fillStyle = color; ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.4; ctx.stroke();
+}
+function _etiqueta(ctx, X, Y, texto, color, dx = 12, dy = -14) {
+  ctx.font = 'bold 11px "Segoe UI", sans-serif';
+  const w = ctx.measureText(texto).width + 10, h = 16;
+  const x0 = X + dx - w / 2, y0 = Y + dy - h / 2;
+  ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 1;
+  ctx.setLineDash([2, 2]); ctx.moveTo(X, Y); ctx.lineTo(X + dx, Y + dy); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.strokeStyle = color; ctx.lineWidth = 1.3;
+  ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(texto, x0 + w / 2, y0 + h / 2);
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+}
+function _vacio(cv, msg) {
+  if (!cv) return;
+  const r = _ajustarCanvas(cv);
+  r.ctx.fillStyle = '#fafafa'; r.ctx.fillRect(0, 0, r.W, r.H);
+  r.ctx.fillStyle = '#90a4ae'; r.ctx.font = '12px "Segoe UI", sans-serif';
+  r.ctx.textAlign = 'center'; r.ctx.fillText(msg || 'Sin datos', r.W / 2, r.H / 2);
+  r.ctx.textAlign = 'left';
+}
+function dibujarDiagramas(ctx) {
+  const { st1, st2, st2s, sys } = ctx;
+  dibujarPv(st1, st2, st2s, sys);
+  dibujarTs(st1, st2, st2s, sys);
+  dibujarPT(st1, st2, st2s, sys);
+  dibujarHs(st1, st2, st2s, sys);
+}
+function dibujarPv(st1, st2, st2s, sys) {
+  const cv = document.getElementById('cvPv'); if (!cv) return;
+  const r = _ajustarCanvas(cv); const { ctx, W, H } = r; ctx.clearRect(0, 0, W, H);
+  const pts = [[st1.P, st1.v], [st2.P, st2.v]];
+  if (st2s) pts.push([st2s.P, st2s.v]);
+  const xs = pts.map(p => p[1]), ys = pts.map(p => p[0]);
+  const escX = _escala(Math.min(...xs), Math.max(...xs), 0.1);
+  const escY = _escala(Math.min(...ys), Math.max(...ys), 0.1);
+  const m = _dibujarMarco(ctx, W, H, escX, escY, `v [${U[sys].v}]`, `P [${U[sys].P}]`);
+  const pw = W - m.l - m.r, ph = H - m.t - m.b;
+  const mx = v => _mapX(v, escX, m, pw), my = v => _mapY(v, escY, m, ph);
+  if (st2s) _linea(ctx, [[st1.v, st1.P], [st2s.v, st2s.P]], mx, my, '#6a1b9a', [6, 4], 1.7);
+  _linea(ctx, [[st1.v, st1.P], [st2.v, st2.P]], mx, my, '#c62828', [], 2.5);
+  _punto(ctx, st1.v, st1.P, mx, my, '#1565c0');
+  if (st2s) _punto(ctx, st2s.v, st2s.P, mx, my, '#6a1b9a');
+  _punto(ctx, st2.v, st2.P, mx, my, '#c62828');
+  _etiqueta(ctx, mx(st1.v), my(st1.P), '1', '#1565c0', 14, -16);
+  if (st2s) _etiqueta(ctx, mx(st2s.v), my(st2s.P), '2s', '#6a1b9a', 14, 16);
+  _etiqueta(ctx, mx(st2.v), my(st2.P), '2', '#c62828', 14, -16);
+  document.getElementById('leyPv').innerHTML = _leyendaHTML(!!st2s);
+}
+function dibujarTs(st1, st2, st2s, sys) {
+  const cv = document.getElementById('cvTs'); if (!cv) return;
+  const r = _ajustarCanvas(cv); const { ctx, W, H } = r; ctx.clearRect(0, 0, W, H);
+  const pts = [[st1.s, st1.T], [st2.s, st2.T]];
+  if (st2s) pts.push([st2s.s, st2s.T]);
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  const escX = _escala(Math.min(...xs), Math.max(...xs), 0.1);
+  const escY = _escala(Math.min(...ys), Math.max(...ys), 0.1);
+  const m = _dibujarMarco(ctx, W, H, escX, escY, `s [${U[sys].s}]`, `T [${U[sys].T}]`);
+  const pw = W - m.l - m.r, ph = H - m.t - m.b;
+  const mx = v => _mapX(v, escX, m, pw), my = v => _mapY(v, escY, m, ph);
+  if (st2s) _linea(ctx, [[st1.s, st1.T], [st2s.s, st2s.T]], mx, my, '#6a1b9a', [6, 4], 1.7);
+  _linea(ctx, [[st1.s, st1.T], [st2.s, st2.T]], mx, my, '#c62828', [], 2.5);
+  _punto(ctx, st1.s, st1.T, mx, my, '#1565c0');
+  if (st2s) _punto(ctx, st2s.s, st2s.T, mx, my, '#6a1b9a');
+  _punto(ctx, st2.s, st2.T, mx, my, '#c62828');
+  _etiqueta(ctx, mx(st1.s), my(st1.T), '1', '#1565c0', 14, -16);
+  if (st2s) _etiqueta(ctx, mx(st2s.s), my(st2s.T), '2s', '#6a1b9a', 14, 16);
+  _etiqueta(ctx, mx(st2.s), my(st2.T), '2', '#c62828', 14, -16);
+  document.getElementById('leyTs').innerHTML = _leyendaHTML(!!st2s);
+}
+function dibujarPT(st1, st2, st2s, sys) {
+  const cv = document.getElementById('cvPT'); if (!cv) return;
+  const r = _ajustarCanvas(cv); const { ctx, W, H } = r; ctx.clearRect(0, 0, W, H);
+  const pts = [[st1.T, st1.P], [st2.T, st2.P]];
+  if (st2s) pts.push([st2s.T, st2s.P]);
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  const escX = _escala(Math.min(...xs), Math.max(...xs), 0.1);
+  const escY = _escala(Math.min(...ys), Math.max(...ys), 0.1);
+  const m = _dibujarMarco(ctx, W, H, escX, escY, `T [${U[sys].T}]`, `P [${U[sys].P}]`);
+  const pw = W - m.l - m.r, ph = H - m.t - m.b;
+  const mx = v => _mapX(v, escX, m, pw), my = v => _mapY(v, escY, m, ph);
+  if (st2s) _linea(ctx, [[st1.T, st1.P], [st2s.T, st2s.P]], mx, my, '#6a1b9a', [6, 4], 1.7);
+  _linea(ctx, [[st1.T, st1.P], [st2.T, st2.P]], mx, my, '#c62828', [], 2.5);
+  _punto(ctx, st1.T, st1.P, mx, my, '#1565c0');
+  if (st2s) _punto(ctx, st2s.T, st2s.P, mx, my, '#6a1b9a');
+  _punto(ctx, st2.T, st2.P, mx, my, '#c62828');
+  _etiqueta(ctx, mx(st1.T), my(st1.P), '1', '#1565c0', 14, -16);
+  if (st2s) _etiqueta(ctx, mx(st2s.T), my(st2s.P), '2s', '#6a1b9a', 14, 16);
+  _etiqueta(ctx, mx(st2.T), my(st2.P), '2', '#c62828', 14, -16);
+  document.getElementById('leyPT').innerHTML = _leyendaHTML(!!st2s);
+}
+function dibujarHs(st1, st2, st2s, sys) {
+  const cv = document.getElementById('cvHs'); if (!cv) return;
+  const r = _ajustarCanvas(cv); const { ctx, W, H } = r; ctx.clearRect(0, 0, W, H);
+  const pts = [[st1.s, st1.h], [st2.s, st2.h]];
+  if (st2s) pts.push([st2s.s, st2s.h]);
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  const escX = _escala(Math.min(...xs), Math.max(...xs), 0.1);
+  const escY = _escala(Math.min(...ys), Math.max(...ys), 0.1);
+  const m = _dibujarMarco(ctx, W, H, escX, escY, `s [${U[sys].s}]`, `h [${U[sys].h}]`);
+  const pw = W - m.l - m.r, ph = H - m.t - m.b;
+  const mx = v => _mapX(v, escX, m, pw), my = v => _mapY(v, escY, m, ph);
+  if (st2s) _linea(ctx, [[st1.s, st1.h], [st2s.s, st2s.h]], mx, my, '#6a1b9a', [6, 4], 1.7);
+  _linea(ctx, [[st1.s, st1.h], [st2.s, st2.h]], mx, my, '#c62828', [], 2.5);
+  _punto(ctx, st1.s, st1.h, mx, my, '#1565c0');
+  if (st2s) _punto(ctx, st2s.s, st2s.h, mx, my, '#6a1b9a');
+  _punto(ctx, st2.s, st2.h, mx, my, '#c62828');
+  _etiqueta(ctx, mx(st1.s), my(st1.h), '1', '#1565c0', 14, -16);
+  if (st2s) _etiqueta(ctx, mx(st2s.s), my(st2s.h), '2s', '#6a1b9a', 14, 16);
+  _etiqueta(ctx, mx(st2.s), my(st2.h), '2', '#c62828', 14, -16);
+  document.getElementById('leyHs').innerHTML = _leyendaHTML(!!st2s);
+}
+function _leyendaHTML(conIso) {
+  let h = '';
+  h += '<span class="item"><span class="sw-linea" style="background:#c62828;"></span>Proceso real 1→2</span>';
+  if (conIso) h += '<span class="item"><span class="sw-linea dash" style="border-top-color:#6a1b9a;"></span>Isoentrópico 1→2s</span>';
+  h += '<span class="item"><span class="sw-punto" style="background:#1565c0;"></span>1: entrada</span>';
+  h += '<span class="item"><span class="sw-punto" style="background:#c62828;"></span>2: salida real</span>';
+  if (conIso) h += '<span class="item"><span class="sw-punto" style="background:#6a1b9a;"></span>2s: salida isoentrópica</span>';
+  return h;
+}
+function redibujarActivo() {
+  const ctx = ultimoContexto[tabActivo];
+  if (ctx) dibujarDiagramas(ctx);
+}
+function descargarDiagrama(canvasId, nombre) {
+  const cv = document.getElementById(canvasId); if (!cv) return;
+  const extra = document.createElement('canvas');
+  extra.width = cv.width; extra.height = cv.height + 38;
+  const ectx = extra.getContext('2d');
+  ectx.fillStyle = '#fff'; ectx.fillRect(0, 0, extra.width, extra.height);
+  ectx.drawImage(cv, 0, 0);
+  ectx.fillStyle = '#0d47a1'; ectx.font = 'bold 13px "Segoe UI", sans-serif';
+  ectx.textAlign = 'center'; ectx.fillText(nombre.replace(/_/g, ' '), extra.width / 2, cv.height + 23);
+  const a = document.createElement('a');
+  a.href = extra.toDataURL('image/png');
+  a.download = nombre + '.png';
+  a.click();
+}
+function descargarTodosDiagramas() {
+  const lista = [
+    { id: 'cvPv', n: 'diagrama_P-v' },
+    { id: 'cvTs', n: 'diagrama_T-s' },
+    { id: 'cvPT', n: 'diagrama_P-T' },
+    { id: 'cvHs', n: 'diagrama_h-s' }
+  ];
+  let i = 0;
+  const sig = () => { if (i >= lista.length) return; descargarDiagrama(lista[i].id, lista[i].n); i++; setTimeout(sig, 350); };
+  sig();
+}
+
+/* ============================================================
+   EJEMPLOS
+   ============================================================ */
+function cargarEjemploC(n) {
+  const sys = getUnitSys();
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+  ['cp1_P','cp1_T','cp1_m','cp1_v','cp2_P','cp2_T','cp2_m','cp2_v','cp_eta'].forEach(id => set(id, ''));
+  document.querySelectorAll('#tab-compresores .overlay input').forEach(el => el.classList.remove('calculado'));
+  document.getElementById('cp1_fase').textContent = 'Fase: —';
+  document.getElementById('cp2_fase').textContent = 'Fase: —';
+  document.getElementById('cp_resultados').innerHTML = '<span style="color:#78909c;">Ejecute los balances para ver los resultados...</span>';
+
+  if (sys === 'SI') {
+    if (n === 1) {
+      document.getElementById('cp_gas').value = 'Hydrogen';
+      document.getElementById('cp_model').value = 'ideal';
+      document.getElementById('cp_ideal_opts').style.display = 'flex';
+      set('cp_cp', '14,3'); set('cp_cv', '10,2'); set('cp_R', '4,124');
+      set('cp1_P', '100'); set('cp1_T', '25'); set('cp1_m', '0,5');
+      set('cp2_P', '20000'); set('cp_eta', '75');
+    } else if (n === 2) {
+      document.getElementById('cp_gas').value = 'CO2';
+      document.getElementById('cp_model').value = 'ideal';
+      document.getElementById('cp_ideal_opts').style.display = 'flex';
+      set('cp_cp', '0,84'); set('cp_cv', '0,627'); set('cp_R', '0,189');
+      set('cp1_P', '100'); set('cp1_T', '30'); set('cp1_m', '0,5');
+      set('cp2_P', '1000'); set('cp_eta', '75');
+    } else {
+      document.getElementById('cp_gas').value = 'Air';
+      document.getElementById('cp_model').value = 'ideal';
+      document.getElementById('cp_ideal_opts').style.display = 'flex';
+      set('cp_cp', '1,005'); set('cp_cv', '0,718'); set('cp_R', '0,287');
+      set('cp1_P', '100'); set('cp1_T', '20'); set('cp1_m', '0,5');
+      set('cp2_P', '500'); set('cp_eta', '80');
+    }
+  } else {
+    if (n === 1) {
+      document.getElementById('cp_gas').value = 'Hydrogen';
+      document.getElementById('cp_model').value = 'ideal';
+      document.getElementById('cp_ideal_opts').style.display = 'flex';
+      set('cp_cp', '3,42'); set('cp_cv', '2,44'); set('cp_R', '0,985');
+      set('cp1_P', '14,5'); set('cp1_T', '77'); set('cp1_m', '1,1');
+      set('cp2_P', '2900'); set('cp_eta', '75');
+    } else if (n === 2) {
+      document.getElementById('cp_gas').value = 'CO2';
+      document.getElementById('cp_model').value = 'ideal';
+      document.getElementById('cp_ideal_opts').style.display = 'flex';
+      set('cp_cp', '0,20'); set('cp_cv', '0,15'); set('cp_R', '0,045');
+      set('cp1_P', '14,5'); set('cp1_T', '86'); set('cp1_m', '1,1');
+      set('cp2_P', '145'); set('cp_eta', '75');
+    } else {
+      document.getElementById('cp_gas').value = 'Air';
+      set('cp1_P', '14,5'); set('cp1_T', '68'); set('cp1_m', '1,1');
+      set('cp2_P', '72,5'); set('cp_eta', '80');
+    }
+  }
+  actualizarProps('cp');
+  mostrarContexto('cp', CONTEXTOS_C[n]);
+}
+
+function cargarEjemploT(n) {
+  const sys = getUnitSys();
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+  ['tp1_P','tp1_T','tp1_m','tp1_v','tp2_P','tp2_T','tp2_m','tp2_v','tp_eta'].forEach(id => set(id, ''));
+  document.querySelectorAll('#tab-toberas .overlay input').forEach(el => el.classList.remove('calculado'));
+  document.getElementById('tp1_fase').textContent = 'Fase: —';
+  document.getElementById('tp2_fase').textContent = 'Fase: —';
+  document.getElementById('tp_resultados').innerHTML = '<span style="color:#78909c;">Ejecute los balances para ver los resultados...</span>';
+
+  if (sys === 'SI') {
+    if (n === 1) { // Vapor
+      document.getElementById('tp_gas').value = 'Water';
+      document.getElementById('tp_model').value = 'real';
+      document.getElementById('tp_ideal_opts').style.display = 'none';
+      set('tp1_P', '2756,3'); set('tp1_T', '316'); set('tp1_m', '0,3778'); set('tp1_v', '0');
+      set('tp2_P', '1795'); set('tp_eta', '95');
+    } else if (n === 2) { // CO₂ CCS
+      document.getElementById('tp_gas').value = 'CO2';
+      document.getElementById('tp_model').value = 'ideal';
+      document.getElementById('tp_ideal_opts').style.display = 'flex';
+      set('tp_cp', '0,846'); set('tp_cv', '0,657'); set('tp_R', '0,189');
+      set('tp1_P', '5000'); set('tp1_T', '60'); set('tp1_v', '10'); set('tp1_m', '2');
+      set('tp2_P', '1000'); set('tp_eta', '88');
+    } else if (n === 3) { // Aire TOBERA (soplador)
+      document.getElementById('tp_gas').value = 'Air';
+      document.getElementById('tp_model').value = 'ideal';
+      document.getElementById('tp_ideal_opts').style.display = 'flex';
+      set('tp_cp', '1,005'); set('tp_cv', '0,718'); set('tp_R', '0,287');
+      set('tp1_P', '500'); set('tp1_T', '100'); set('tp1_v', '20'); set('tp1_m', '1');
+      set('tp2_P', '100'); set('tp_eta', '90');
+    } else { // Aire DIFUSOR
+      document.getElementById('tp_gas').value = 'Air';
+      document.getElementById('tp_model').value = 'ideal';
+      document.getElementById('tp_ideal_opts').style.display = 'flex';
+      set('tp_cp', '1,005'); set('tp_cv', '0,718'); set('tp_R', '0,287');
+      set('tp1_P', '70'); set('tp1_T', '57'); set('tp1_v', '200'); set('tp1_m', '1');
+      set('tp2_P', '100'); set('tp_eta', '90');
+    }
+  } else {
+    if (n === 1) {
+      document.getElementById('tp_gas').value = 'Water';
+      document.getElementById('tp_model').value = 'real';
+      document.getElementById('tp_ideal_opts').style.display = 'none';
+      set('tp1_P', '399,7'); set('tp1_T', '600,8'); set('tp1_m', '0,833'); set('tp1_v', '0');
+      set('tp2_P', '260,3'); set('tp_eta', '95');
+    } else if (n === 2) {
+      document.getElementById('tp_gas').value = 'CO2';
+      document.getElementById('tp_model').value = 'ideal';
+      document.getElementById('tp_ideal_opts').style.display = 'flex';
+      set('tp_cp', '0,20'); set('tp_cv', '0,16'); set('tp_R', '0,045');
+      set('tp1_P', '725'); set('tp1_T', '140'); set('tp1_v', '33'); set('tp1_m', '4,4');
+      set('tp2_P', '145'); set('tp_eta', '88');
+    } else if (n === 3) {
+      document.getElementById('tp_gas').value = 'Air';
+      document.getElementById('tp_model').value = 'ideal';
+      document.getElementById('tp_ideal_opts').style.display = 'flex';
+      set('tp_cp', '0,24'); set('tp_cv', '0,171'); set('tp_R', '0,069');
+      set('tp1_P', '72,5'); set('tp1_T', '212'); set('tp1_v', '66'); set('tp1_m', '2,2');
+      set('tp2_P', '14,5'); set('tp_eta', '90');
+    } else {
+      document.getElementById('tp_gas').value = 'Air';
+      document.getElementById('tp_model').value = 'ideal';
+      document.getElementById('tp_ideal_opts').style.display = 'flex';
+      set('tp_cp', '0,24'); set('tp_cv', '0,171'); set('tp_R', '0,069');
+      set('tp1_P', '10,2'); set('tp1_T', '134,6'); set('tp1_v', '656'); set('tp1_m', '2,2');
+      set('tp2_P', '14,5'); set('tp_eta', '90');
+    }
+  }
+  actualizarProps('tp');
+  mostrarContexto('tp', CONTEXTOS_T[n]);
+}
+
+/* ============================================================
+   LIMPIAR
+   ============================================================ */
+function limpiarTodo(tab) {
+  const pref = tab === 'compresores' ? 'cp' : 'tp';
+  const def = DEFAULTS[pref];
+  document.querySelectorAll(`#tab-${tab} .overlay input`).forEach(el => {
+    el.value = ''; el.classList.remove('calculado');
+  });
+  document.getElementById(pref + '_gas').value = def.gas;
+  document.getElementById(pref + '_model').value = def.model;
+  document.getElementById(pref + '_ideal_opts').style.display = def.model === 'ideal' ? 'flex' : 'none';
+  document.getElementById(pref + '_cp').value = def.Cp;
+  document.getElementById(pref + '_cv').value = def.Cv;
+  document.getElementById(pref + '_R').value = def.R;
+  document.getElementById(pref + '_eta').value = def.eta;
+  actualizarProps(pref);
+  document.getElementById(pref + '1_fase').textContent = 'Fase: —';
+  document.getElementById(pref + '2_fase').textContent = 'Fase: —';
+  document.getElementById(pref + '_resultados').innerHTML = '<span style="color:#78909c;">Los resultados aparecerán aquí...</span>';
+  const ctxBox = document.getElementById(pref + '_contexto');
+  if (ctxBox) { ctxBox.classList.remove('visible'); }
+  ultimoContexto[tab] = null;
+  ['cvPv','cvTs','cvPT','cvHs'].forEach(id => _vacio(document.getElementById(id), 'Sin datos'));
+  ['leyPv','leyTs','leyPT','leyHs'].forEach(id => document.getElementById(id).innerHTML = '');
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+    tabActivo = this.dataset.tab;
+    redibujarActivo();
+  });
+});
+
+document.getElementById('unitSystem').addEventListener('change', function() {
+  const sys = this.value;
+  const u = U[sys];
+  document.getElementById('lbl_cp1').textContent = `P₁ [${u.P}]`;
+  document.getElementById('lbl_cp2').textContent = `P₂ [${u.P}]`;
+  document.getElementById('lbl_ct1').textContent = `T₁ [${u.T}]`;
+  document.getElementById('lbl_ct2').textContent = `T₂ [${u.T}]`;
+  document.getElementById('lbl_tp1').textContent = `P₁ [${u.P}]`;
+  document.getElementById('lbl_tp2').textContent = `P₂ [${u.P}]`;
+  document.getElementById('lbl_tt1').textContent = `T₁ [${u.T}]`;
+  document.getElementById('lbl_tt2').textContent = `T₂ [${u.T}]`;
+});
+
+window.addEventListener('load', function() {
+  poblarGases();
+  initPyodide();
+});
+</script>
+</body>
+</html>
