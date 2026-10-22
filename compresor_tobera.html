@@ -9,26 +9,21 @@
   body { background: #eceff1; margin: 0; padding: 16px; min-height: 100vh; }
   h1 { font-size: 21px; color: #0d47a1; margin: 0 0 4px 0; text-align: center; }
   .sub { color: #546e7a; font-size: 12px; margin: 0 0 12px 0; text-align: center; }
-
   .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
   .tab-btn { padding: 9px 22px; border: 2px solid #cfd8dc; background: #fff; border-radius: 10px 10px 0 0; font-weight: 700; font-size: 13.5px; color: #546e7a; cursor: pointer; transition: 0.15s; }
   .tab-btn.active { background: #1976d2; color: #fff; border-color: #1976d2; }
   .tab-btn:hover:not(.active) { background: #e3f2fd; }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
-
   .global-units { display: flex; gap: 12px; align-items: center; justify-content: center; background: #fff; padding: 8px 16px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin: 0 auto 12px auto; max-width: fit-content; flex-wrap: wrap; }
   .global-units label { font-size: 12.5px; font-weight: 600; color: #37474f; }
   .global-units select { padding: 5px 10px; border: 1px solid #b0bec5; border-radius: 6px; font-size: 12.5px; font-weight: 600; background: #f5f5f5; }
-
   .app-container { display: flex; flex-wrap: wrap; gap: 14px; max-width: 1750px; margin: 0 auto; align-items: flex-start; }
   .left-col { display: flex; flex-direction: column; gap: 12px; flex: 1 1 720px; min-width: 520px; max-width: 880px; }
   .right-col { display: flex; flex-direction: column; gap: 12px; flex: 1 1 380px; min-width: 320px; max-width: 500px; }
-
   .canvas-wrapper { position: relative; background: #fff; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.15); padding: 10px; }
   .canvas-inner { position: relative; display: inline-block; width: 100%; line-height: 0; text-align: center; }
   #imgCompresor, #imgTobera { display: inline-block; width: 40%; height: auto; border-radius: 6px; background: #fafafa; user-select: none; vertical-align: top; }
-
   .overlay { position: absolute; background: rgba(255,251,230,0.97); border: 2px solid #ffb74d; border-radius: 8px; padding: 5px 7px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); font-size: 10.5px; line-height: 1.3; z-index: 10; width: 165px; }
   .overlay.c2 { background: rgba(232,245,233,0.97); border-color: #66bb6a; }
   .overlay .ttl { font-weight: 700; font-size: 10.5px; color: #0d47a1; margin-bottom: 3px; text-align: center; border-bottom: 1px dashed #ffcc80; padding-bottom: 2px; }
@@ -40,24 +35,19 @@
   .overlay .fld input.calculado { background: #c8e6c9 !important; border-color: #2e7d32 !important; color: #1b5e20; font-weight: 700; }
   .overlay .fase { margin-top: 3px; font-size: 9px; font-style: italic; color: #555; border-top: 1px dashed #ffcc80; padding-top: 2px; text-align: center; }
   .overlay.c2 .fase { border-top-color: #a5d6a7; }
-
   #panelC1, #panelT1 { top: 0; left: 6px; }
   #panelC2, #panelT2 { top: 0; right: 6px; }
-
   .legend { display: flex; gap: 14px; align-items: center; font-size: 11px; color: #455a64; padding: 5px 10px; background: #f5f5f5; border-radius: 6px; margin-top: 8px; flex-wrap: wrap; }
   .legend .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid #90a4ae; vertical-align: middle; margin-right: 5px; }
   .legend .sw.user { background: #fff; }
   .legend .sw.calc { background: #c8e6c9; border-color: #2e7d32; }
-
   .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 11px 13px; }
   .card h3 { margin: 0 0 7px 0; font-size: 13.5px; color: #0d47a1; border-bottom: 2px solid #e3f2fd; padding-bottom: 4px; }
   .card .row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-bottom: 5px; }
   .card .row label { font-size: 11px; color: #37474f; font-weight: 500; }
   .card .row input, .card .row select { padding: 4px 7px; border: 1px solid #b0bec5; border-radius: 5px; font-size: 12px; font-family: 'Consolas', monospace; }
-
   .bottom-row { display: grid; grid-template-columns: 1.15fr 1fr; gap: 12px; }
   @media (max-width: 700px) { .bottom-row { grid-template-columns: 1fr; } }
-
   .btn-group { display: flex; flex-wrap: wrap; gap: 5px; margin: 5px 0; }
   .btn { padding: 7px 10px; border: none; border-radius: 7px; font-weight: 600; font-size: 11px; cursor: pointer; transition: 0.15s; flex: 1 1 auto; min-width: 85px; }
   .btn:hover { filter: brightness(0.93); transform: translateY(-1px); }
@@ -72,42 +62,27 @@
   .btn-limpiar { background: #ef5350; color: #fff; }
   .btn-diag { background: #00838f; color: #fff; }
   .btn-down { background: #455a64; color: #fff; }
-
   .resultados { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 12px; max-height: 560px; overflow-y: auto; font-family: 'Consolas', monospace; font-size: 11px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
   .tag-h { font-weight: 700; color: #0d47a1; font-size: 12px; display: block; margin-top: 4px; }
   .tag-res { font-weight: 700; color: #1b5e20; background: #e8f5e9; padding: 1px 4px; border-radius: 3px; }
-  .tag-warn { color: #b71c1c; font-weight: 600; }
-  .tag-nota { color: #e65100; }
+  .tag-warn { color: #b71c1c; font-weight: 600; background: #ffebee; padding: 6px 8px; border-radius: 5px; display: block; margin: 4px 0; border-left: 3px solid #c62828; }
+  .tag-nota { color: #e65100; background: #fff3e0; padding: 4px 8px; border-radius: 5px; display: block; margin: 4px 0; border-left: 3px solid #ff9800; }
   .tag-sub { font-weight: 600; color: #37474f; margin-top: 4px; display: block; }
   .tag-info { color: #01579b; font-weight: 600; }
-
-  .contexto {
-    background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
-    border-left: 4px solid #1976d2;
-    border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 11.5px;
-    color: #263238;
-    line-height: 1.5;
-    margin-bottom: 10px;
-    display: none;
-  }
+  .contexto { background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%); border-left: 4px solid #1976d2; border-radius: 8px; padding: 9px 12px; font-size: 11.5px; color: #263238; line-height: 1.5; margin-bottom: 10px; display: none; }
   .contexto.visible { display: block; }
   .contexto .ctx-titulo { font-weight: 700; color: #0d47a1; font-size: 12.5px; display: block; margin-bottom: 3px; }
   .contexto .ctx-cuerpo { display: block; }
   .contexto .ctx-cuerpo b { color: #1b5e20; }
-
   #pyodide-banner { display: flex; align-items: center; gap: 10px; background: #fff8e1; border: 2px solid #ffb74d; color: #7c5a00; padding: 9px 15px; border-radius: 8px; font-size: 12px; font-weight: 600; margin: 0 auto 12px auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); max-width: 820px; text-align: center; }
   #pyodide-banner.ready { background: #e8f5e9; border-color: #66bb6a; color: #1b5e20; }
   #pyodide-banner.error { background: #ffebee; border-color: #ef5350; color: #b71c1c; }
   #pyodide-banner.partial { background: #fff3e0; border-color: #ff9800; color: #e65100; }
   .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #ffb74d; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .props-resumen { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; font-size: 11px; font-family: 'Consolas', monospace; }
   .props-resumen span { color: #37474f; }
   .props-resumen b { color: #0d47a1; }
-
   .diagramas-section { max-width: 1750px; margin: 22px auto 0 auto; }
   .diagramas-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
   .diagramas-header h2 { margin: 0; font-size: 17px; color: #0d47a1; }
@@ -125,9 +100,7 @@
   .diag-leyenda .sw-linea { display: inline-block; width: 14px; height: 2px; border-radius: 2px; }
   .diag-leyenda .sw-linea.dash { height: 0; border-top: 2px dashed; background: transparent !important; }
   .diag-leyenda .sw-punto { display: inline-block; width: 6px; height: 6px; border-radius: 50%; border: 1px solid #fff; }
-
   .footer { text-align: center; font-size: 10.5px; color: #78909c; margin-top: 18px; padding: 8px; }
-
   @media (max-width: 1100px) {
     .app-container { flex-direction: column; }
     .left-col, .right-col { max-width: none; min-width: 0; }
@@ -138,7 +111,7 @@
 <body>
 
 <h1>⚙️ Compresores y Toberas · Balances de Materia, Energía y Entropía</h1>
-<p class="sub">Dr. Ronald F. Rodriguez Espinoza — Propiedades: <b>Gas ideal (JS)</b> + <b>IAPWS-IF97</b> (Pyodide) + <b>CoolProp HTTP</b></p>
+<p class="sub">Dr. Ronald F. Rodriguez Espinoza — Propiedades: <b>Gas ideal (JS)</b> + <b>IAPWS-IF97</b> (agua) + <b>CoolProp</b> (gases reales)</p>
 
 <div id="pyodide-banner">
   <span class="spinner"></span>
@@ -203,7 +176,7 @@
             <label>Modelo:</label>
             <select id="cp_model" style="flex:1;">
               <option value="ideal" selected>Gas Ideal (JS)</option>
-              <option value="real">Gas Real (IAPWS / CoolProp HTTP)</option>
+              <option value="real">Gas Real (IAPWS / CoolProp)</option>
             </select>
           </div>
           <div class="row" id="cp_ideal_opts">
@@ -305,7 +278,7 @@
             <label>Modelo:</label>
             <select id="tp_model" style="flex:1;">
               <option value="ideal" selected>Gas Ideal (JS)</option>
-              <option value="real">Gas Real (IAPWS / CoolProp HTTP)</option>
+              <option value="real">Gas Real (IAPWS / CoolProp)</option>
             </select>
           </div>
           <div class="row" id="tp_ideal_opts">
@@ -410,16 +383,18 @@
 </div>
 
 <div class="footer">
-  Dr. Ronald F. Rodriguez Espinoza · Gas ideal (JS) · IAPWS-IF97 (Pyodide) · CoolProp HTTP
+  Dr. Ronald F. Rodriguez Espinoza · IAPWS-IF97 + CoolProp (Pyodide)
 </div>
 
-<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.29.2/full/pyodide.js"></script>
 <script>
 /* ============================================================
    ESTADO GLOBAL
    ============================================================ */
 let pyodide = null;
 let pyodideListo = false;
+let coolpropListo = false;
+let iapwsListo = false;
 let tabActivo = 'compresores';
 let ultimoContexto = { compresores: null, toberas: null };
 
@@ -429,7 +404,7 @@ const DEFAULTS = {
 };
 
 /* ============================================================
-   LISTA AMPLIADA DE GASES
+   LISTA DE GASES
    ============================================================ */
 const GASES = [
   { group: '── Gases comunes ──', items: [
@@ -487,26 +462,25 @@ const GASES = [
 ];
 
 /* ============================================================
-   CONTEXTOS DE EJEMPLOS
+   CONTEXTOS
    ============================================================ */
 const CONTEXTOS_C = {
   1: { titulo: '📌 Compresor de H₂ verde (electrólisis)',
-       cuerpo: 'Planta de <b>hidrógeno verde</b>: H₂ a 1 bar y 25 °C se comprime a <b>200 bar</b> para almacenamiento o transporte. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>75 %</b>. Objetivo: calcular <b>T₂ real</b>, <b>Ẇ_real</b> y <b>Ṡ_gen</b> — clave para la viabilidad energética de la economía del H₂.' },
-  2: { titulo: '📌 Compresor de CO₂ en CCS (captura y almacenamiento)',
-       cuerpo: 'En una planta piloto de <b>CCS</b>, CO₂ capturado se comprime de 100 kPa a 1 MPa para inyección geológica. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>75 %</b>. Objetivo: cuantificar <b>Ẇ_real</b> y <b>Ṡ_gen</b> — las irreversibilidades se traducen en emisiones indirectas y penalizan el balance ambiental.' },
+       cuerpo: 'Planta de <b>hidrógeno verde</b>: H₂ a 1 bar y 25 °C se comprime a <b>200 bar</b>. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>75 %</b>. Objetivo: calcular <b>T₂ real</b>, <b>Ẇ_real</b> y <b>Ṡ_gen</b> para evaluar la viabilidad energética del H₂.' },
+  2: { titulo: '📌 Compresor de CO₂ en CCS',
+       cuerpo: 'En <b>Captura y Almacenamiento de Carbono (CCS)</b>, CO₂ se comprime de 100 kPa a 1 MPa. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>75 %</b>. Objetivo: cuantificar <b>Ẇ_real</b> y <b>Ṡ_gen</b> — las irreversibilidades se traducen en emisiones indirectas.' },
   3: { titulo: '📌 Compresor de aire industrial (caso base)',
-       cuerpo: 'Compresor adiabático de <b>aire</b> de 100 kPa a 500 kPa. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>80 %</b>. Caso didáctico para comparar con los casos reales (H₂, CO₂) y observar el efecto de la relación de compresión.' }
+       cuerpo: 'Compresor adiabático de aire de 100 kPa a 500 kPa. Ṁ = <b>0,5 kg/s</b>, η_iso = <b>80 %</b>. Caso didáctico para comparar con los casos reales.' }
 };
-
 const CONTEXTOS_T = {
   1: { titulo: '📌 Tobera de vapor en turbina',
-       cuerpo: 'Vapor de agua entra a una tobera adiabática a <b>28,1 kgf/cm²</b> (≈2756 kPa) y <b>316 °C</b>, y sale a <b>18,3 kgf/cm²</b> (≈1795 kPa). Ṁ = <b>0,378 kg/s</b>. Objetivo: determinar <b>T₂</b>, <b>calidad o sobrecalentamiento</b> y el <b>área de salida</b> de la tobera.' },
+       cuerpo: 'Vapor a 28,1 kgf/cm² (≈2756 kPa) y 316 °C se expande a 18,3 kgf/cm² (≈1795 kPa). Ṁ = <b>0,378 kg/s</b>, η_iso = <b>95 %</b>. Objetivo: <b>T₂</b>, <b>calidad</b> y <b>área de salida</b>.' },
   2: { titulo: '📌 Tobera de CO₂ en CCS (expansión criogénica)',
-       cuerpo: 'En <b>Captura de Carbono</b>, CO₂ a <b>5 MPa</b> y <b>60 °C</b> se expande en una tobera adiabática hasta <b>1 MPa</b> para acondicionar el flujo antes de la etapa de licuefacción. Ṁ = <b>2 kg/s</b>, η_iso = <b>88 %</b>. Objetivo: <b>T₂</b>, <b>V₂</b> y <b>Ṡ_gen</b> como métrica de eficiencia exergética.' },
-  3: { titulo: '📌 Tobera de aire comprimido industrial (soplador)',
-       cuerpo: 'Aire comprimido a <b>500 kPa</b> y <b>100 °C</b> se expande en una tobera adiabática hasta <b>100 kPa</b> para generar un chorro de alta velocidad (limpieza industrial, soplado, atomización). Ṁ = <b>1 kg/s</b>, η_iso = <b>90 %</b>. Objetivo: <b>T₂</b>, <b>V₂</b> y <b>Ṡ_gen</b>. <i>Caso puro de tobera: P₂ &lt; P₁</i>.' },
+       cuerpo: 'CO₂ a 5 MPa y 60 °C se expande a 1 MPa antes de licuefacción. Ṁ = <b>2 kg/s</b>, η_iso = <b>88 %</b>. Objetivo: <b>T₂</b>, <b>V₂</b> y <b>Ṡ_gen</b>.' },
+  3: { titulo: '📌 Tobera de aire comprimido industrial',
+       cuerpo: 'Aire a 500 kPa y 100 °C se expande a 100 kPa. Ṁ = <b>1 kg/s</b>, η_iso = <b>90 %</b>. Caso puro de tobera (P₂ < P₁).' },
   4: { titulo: '📌 Difusor de aire (medición de flujo)',
-       cuerpo: 'Aire a <b>70 kPa</b> y <b>57 °C</b> con V₁ = <b>200 m/s</b> entra a un difusor adiabático y sale a <b>100 kPa</b>. Ṁ = <b>1 kg/s</b>, η_iso = <b>90 %</b>. Es un <b>difusor</b> (P₂ &gt; P₁): el fluido se desacelera y gana presión. Objetivo: <b>T₂</b>, <b>V₂</b> y balance de energía con Êc dominante.' }
+       cuerpo: 'Aire a 70 kPa y 57 °C con V₁ = 200 m/s entra a un difusor adiabático y sale a 100 kPa. Ṁ = <b>1 kg/s</b>, η_iso = <b>90 %</b>. Caso de difusor (P₂ > P₁).' }
 };
 
 /* ============================================================
@@ -592,7 +566,7 @@ function actualizarProps(pref) {
 }
 
 /* ============================================================
-   PYODIDE (IAPWS-IF97)
+   PYODIDE (IAPWS + CoolProp) — CONVERSIÓN SI CORREGIDA
    ============================================================ */
 function setBanner(state, html) {
   const b = document.getElementById('pyodide-banner');
@@ -604,18 +578,22 @@ async function initPyodide() {
   try {
     setBanner('', '<span class="spinner"></span><span>Cargando Pyodide…</span>');
     pyodide = await loadPyodide();
+    console.log('Pyodide cargado.');
+
     setBanner('', '<span class="spinner"></span><span>Cargando numpy + scipy…</span>');
     await pyodide.loadPackage(['numpy', 'scipy']);
-    setBanner('', '<span class="spinner"></span><span>Instalando iapws…</span>');
+    console.log('numpy + scipy listos.');
+
     await pyodide.loadPackage('micropip');
     const micropip = pyodide.pyimport('micropip');
-    const iapwsPromise = micropip.install('iapws');
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Timeout iapws (>45 s)')), 45000)
-    );
-    await Promise.race([iapwsPromise, timeoutPromise]);
 
-    await pyodide.runPythonAsync(`
+    // ---------- IAPWS-IF97 ----------
+    setBanner('', '<span class="spinner"></span><span>Instalando iapws…</span>');
+    try {
+      const iapwsP = micropip.install('iapws');
+      const iapwsT = new Promise((_, rej) => setTimeout(() => rej(new Error('Timeout iapws')), 45000));
+      await Promise.race([iapwsP, iapwsT]);
+      await pyodide.runPythonAsync(`
 import json
 from iapws import IAPWS97
 
@@ -636,7 +614,7 @@ def estado_agua(kwargs_json):
     try:
         kw = json.loads(kwargs_json)
         kw = {k: float(v) for k, v in kw.items()}
-        if 'P' in kw: kw['P'] = kw['P']/1000.0
+        if 'P' in kw: kw['P'] = kw['P']/1000.0  # kPa -> MPa (IAPWS espera MPa)
         st = IAPWS97(**kw)
         if st.h is None: return json.dumps({'error':'Fuera de rango IAPWS-IF97'})
         return json.dumps({
@@ -647,67 +625,133 @@ def estado_agua(kwargs_json):
     except Exception as e:
         return json.dumps({'error': str(e)})
 `);
+      iapwsListo = true;
+      console.log('IAPWS-IF97 instalado.');
+    } catch (e) {
+      console.warn('IAPWS no disponible:', e);
+    }
+
+    // ---------- CoolProp con conversión SI correcta ----------
+    setBanner('', '<span class="spinner"></span><span>Instalando CoolProp (puede tardar ~30 s)…</span>');
+    try {
+      const cpP = micropip.install('CoolProp');
+      const cpT = new Promise((_, rej) => setTimeout(() => rej(new Error('Timeout CoolProp')), 90000));
+      await Promise.race([cpP, cpT]);
+      await pyodide.runPythonAsync(`
+import json
+from CoolProp.CoolProp import PropsSI
+
+def estado_coolprop(fluid, kwargs_json):
+    try:
+        kw = json.loads(kwargs_json)
+        kw = {k: float(v) for k, v in kw.items()}
+        
+        # === CONVERSIÓN A UNIDADES SI PARA COOLPROP ===
+        # El JS envía: P en kPa, T en K, h en kJ/kg, s en kJ/(kg·K)
+        # CoolProp espera: P en Pa, T en K, h en J/kg, s en J/(kg·K)
+        P_si = kw['P'] * 1000.0 if 'P' in kw else None       # kPa → Pa
+        T_si = kw.get('T')                                     # K (sin cambio)
+        h_si = kw['h'] * 1000.0 if 'h' in kw else None        # kJ/kg → J/kg
+        s_si = kw['s'] * 1000.0 if 's' in kw else None        # kJ/(kg·K) → J/(kg·K)
+        
+        if P_si is not None and T_si is not None:
+            rho = PropsSI('D','P',P_si,'T',T_si,fluid)
+            hval = PropsSI('H','P',P_si,'T',T_si,fluid)
+            sval = PropsSI('S','P',P_si,'T',T_si,fluid)
+            Tval = T_si
+        elif P_si is not None and h_si is not None:
+            rho = PropsSI('D','P',P_si,'H',h_si,fluid)
+            Tval = PropsSI('T','P',P_si,'H',h_si,fluid)
+            sval = PropsSI('S','P',P_si,'H',h_si,fluid)
+            hval = h_si
+        elif P_si is not None and s_si is not None:
+            rho = PropsSI('D','P',P_si,'S',s_si,fluid)
+            Tval = PropsSI('T','P',P_si,'S',s_si,fluid)
+            hval = PropsSI('H','P',P_si,'S',s_si,fluid)
+            sval = s_si
+        else:
+            return json.dumps({'error':'Se requieren 2 propiedades (P,T), (P,h) o (P,s)'})
+        
+        try:
+            phase = PropsSI('PHASE','P',P_si,'T',Tval,fluid)
+        except Exception:
+            phase = '—'
+        
+        # === DEVOLVER EN UNIDADES DEL USUARIO (kPa, kJ/kg, kJ/(kg·K)) ===
+        return json.dumps({
+            'ok': True,
+            'P': P_si / 1000.0,               # Pa → kPa
+            'T': Tval,                         # K
+            'h': hval / 1000.0,                # J/kg → kJ/kg
+            's': sval / 1000.0,                # J/(kg·K) → kJ/(kg·K)
+            'v': 1.0 / rho,                    # m³/kg
+            'u': (hval - P_si / rho) / 1000.0,  # J/kg → kJ/kg
+            'fase': str(phase), 'x': None
+        })
+    except Exception as e:
+        return json.dumps({'error': str(e)})
+`);
+      coolpropListo = true;
+      console.log('CoolProp instalado.');
+    } catch (e) {
+      console.warn('CoolProp no disponible:', e);
+    }
+
     pyodideListo = true;
-    setBanner('ready', '✅ IAPWS-IF97 listo. CoolProp HTTP para otros gases.');
+
+    if (iapwsListo && coolpropListo) {
+      setBanner('ready', '✅ IAPWS-IF97 + CoolProp listos. Ejemplos en gas ideal por defecto; cambie a <b>Gas Real</b> para usar CoolProp.');
+    } else if (iapwsListo && !coolpropListo) {
+      setBanner('partial', '⚠️ IAPWS-IF97 listo, pero CoolProp no se pudo instalar.<br><small>Agua/vapor en gas real; los demás gases caen a gas ideal al cambiar a "Real".</small>');
+    } else if (!iapwsListo && coolpropListo) {
+      setBanner('partial', '⚠️ CoolProp listo, pero IAPWS no se pudo instalar.<br><small>Agua se calcula con CoolProp; demás gases con CoolProp.</small>');
+    } else {
+      setBanner('error', '❌ No se pudo instalar ninguna librería.<br><small>Solo gas ideal disponible.</small>');
+    }
+
   } catch (e) {
     console.error(e);
-    setBanner('partial', '⚠️ IAPWS no disponible (' + e.message + '). Se usará CoolProp HTTP para todo.');
+    setBanner('error', '❌ Error al cargar Pyodide: ' + e.message);
   }
 }
 
-async function estadoAguaIAPWS(kwargs) {
-  if (!pyodideListo) throw new Error('IAPWS no disponible');
+/* ============================================================
+   CÁLCULO DE ESTADO — con fallback a gas ideal
+   ============================================================ */
+async function calcularEstado(fluid, kwargs, esAgua, gasInfo) {
+  if (!pyodideListo) throw new Error('Pyodide aún se está cargando. Espere unos segundos…');
+
   const jsonStr = JSON.stringify(kwargs);
-  const resJson = await pyodide.runPythonAsync(`estado_agua(${JSON.stringify(jsonStr)})`);
-  const r = JSON.parse(resJson);
-  if (r.error) throw new Error(r.error);
-  return r;
-}
 
-async function estadoCoolPropHTTP(fluid, kwargs) {
-  const params = new URLSearchParams();
-  const pairs = Object.entries(kwargs);
-  if (pairs.length < 2) throw new Error('CoolProp HTTP requiere 2 propiedades');
-  const mapKey = { P: 'P', T: 'T', h: 'H', s: 'S' };
-  const convert = { P: v => v * 1000, T: v => v, h: v => v * 1000, s: v => v * 1000 };
-  pairs.forEach(([k, v]) => {
-    if (!mapKey[k]) return;
-    params.append(mapKey[k], convert[k](v));
-  });
-  params.append('backend', 'HEOS');
-  ['T','P','H','S','D','U','Q'].forEach(out => params.append('output', out));
-  const url = `http://www.coolprop.dreamhosters.com:8080/json/props?${params.toString()}`;
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error('CoolProp HTTP ' + resp.status);
-  const arr = await resp.json();
-  const v = arr[0];
-  const get = (k) => v[k] ? v[k][0] : null;
-  const T_K = get('T'), P_Pa = get('P'), H_Jkg = get('H'), S_JkgK = get('S');
-  const D_kgm3 = get('D'), U_Jkg = get('U'), Q = get('Q');
-  if (T_K === null || P_Pa === null) throw new Error('CoolProp HTTP: respuesta incompleta');
-  let fase = 'Gas real';
-  if (Q !== null && Q >= 0 && Q <= 1) {
-    if (Q <= 1e-9) fase = 'Líquido saturado';
-    else if (Q >= 1-1e-9) fase = 'Vapor saturado';
-    else fase = `Mezcla (x=${Q.toFixed(3)})`;
+  // 1) Agua/vapor → IAPWS-IF97
+  if (esAgua && iapwsListo) {
+    try {
+      const resJson = await pyodide.runPythonAsync(`estado_agua(${JSON.stringify(jsonStr)})`);
+      const r = JSON.parse(resJson);
+      if (r.error) throw new Error(r.error);
+      return r;
+    } catch (e) {
+      console.warn('IAPWS falló, probando CoolProp:', e);
+    }
   }
-  return { ok: true, P: P_Pa/1000, T: T_K, h: H_Jkg/1000, s: S_JkgK/1000,
-           v: 1.0/D_kgm3, u: U_Jkg/1000, fase, x: Q };
-}
 
-async function calcularEstado(fluid, kwargs, esAgua) {
-  if (esAgua && pyodideListo) {
-    try { return await estadoAguaIAPWS(kwargs); }
-    catch (e) { console.warn('IAPWS falló, usando HTTP:', e); }
+  // 2) Otros gases → CoolProp
+  if (coolpropListo) {
+    const code = `estado_coolprop(${JSON.stringify(fluid)},${JSON.stringify(jsonStr)})`;
+    const resJson = await pyodide.runPythonAsync(code);
+    const r = JSON.parse(resJson);
+    if (r.error) throw new Error(r.error);   // ← Si falla, lanza al caller para que haga fallback
+    return r;
   }
-  return await estadoCoolPropHTTP(fluid, kwargs);
+
+  throw new Error('CoolProp no disponible.');
 }
 
 /* ============================================================
    GAS IDEAL
    ============================================================ */
 function estadoIdeal(P_kPa, T_K, R, Cp, Cv) {
-  if (T_K <= 0) throw new Error('Temperatura absoluta ≤ 0 K (revisar η o datos de entrada)');
+  if (T_K <= 0) throw new Error('Temperatura absoluta ≤ 0 K');
   const v = R * T_K / P_kPa;
   const h = Cp * T_K;
   const u = Cv * T_K;
@@ -785,7 +829,8 @@ async function _completarEstadoEntrada(panelId, pref) {
       const Cv = parseFloat(document.getElementById(pref + '_cv').value.replace(',', '.'));
       st = resolverEstadoIdeal(d, R, Cp, Cv);
     } else {
-      st = await calcularEstado(opt.value, d, opt.dataset.iapws === 'true');
+      const gasInfo = { R: parseFloat(opt.dataset.R), Cp: parseFloat(opt.dataset.Cp), Cv: parseFloat(opt.dataset.Cv) };
+      st = await calcularEstado(opt.value, d, opt.dataset.iapws === 'true', gasInfo);
     }
     escribirPanel(panelId, st, sys, pref);
   } catch (e) { mostrarError(pref, e.message); }
@@ -803,7 +848,7 @@ function escribirPanel(panelId, st, sys, pref) {
 }
 
 /* ============================================================
-   RESOLVER COMPRESOR
+   RESOLVER COMPRESOR — con fallback por estado
    ============================================================ */
 async function resolverCompresor(tipo) {
   const cont = document.getElementById('cp_resultados');
@@ -818,7 +863,8 @@ async function resolverCompresor(tipo) {
     const elEta = document.getElementById('cp_eta');
     if (elEta && !elEta.value.trim()) elEta.value = fmt(ctx.eta*100, 5).replace('.', ',');
   } catch (e) {
-    mostrarError('cp', e.message);
+    cont.innerHTML = `<div class="tag-warn">✖ ${e.message}</div>
+      <div class="tag-nota" style="margin-top:6px;">ⓘ Revise que el modelo (<b>${document.getElementById('cp_model').value}</b>) esté disponible y que P₂ > P₁. Si usa Gas Real, espere a que el banner muestre "✅ listo".</div>`;
     console.error(e);
   }
 }
@@ -836,6 +882,8 @@ async function calcularCompresor(d) {
   if (!d.in2.P) throw new Error('Estado 2: ingrese P₂');
 
   let st1, st2s;
+  const avisos = [];
+
   if (d.modelo === 'ideal') {
     if (d.R === null || d.Cp === null || d.Cv === null) throw new Error('Complete R, Cp y Cv');
     if (d.Cv <= 0 || d.Cp <= d.Cv) throw new Error('Cp > Cv > 0 requerido');
@@ -844,8 +892,26 @@ async function calcularCompresor(d) {
     const T2s = st1.T * Math.pow(d.in2.P / st1.P, (gamma - 1) / gamma);
     st2s = estadoIdeal(d.in2.P, T2s, d.R, d.Cp, d.Cv);
   } else {
-    st1 = await calcularEstado(d.gas.coolprop, d.in1, d.gas.iapws);
-    st2s = await calcularEstado(d.gas.coolprop, { P: d.in2.P, s: st1.s }, d.gas.iapws);
+    // st1: cálculo con CoolProp o fallback
+    try {
+      st1 = await calcularEstado(d.gas.coolprop, d.in1, d.gas.iapws, d.gas);
+    } catch (e) {
+      console.warn('CoolProp falló en st1, fallback a gas ideal:', e);
+      avisos.push('CoolProp falló en estado 1 (' + d.gas.nombre + ' a P₁=' + n(P_fromSI(d.in1.P, d.sys)) + ' kPa, T₁=' + n(T_fromSI(d.in1.T, d.sys)) + ' °C). Se usó gas ideal.');
+      st1 = estadoIdeal(d.in1.P, d.in1.T, d.gas.R, d.gas.Cp, d.gas.Cv);
+      st1.fase = 'Gas ideal (fallback)';
+    }
+    // st2s: cálculo con CoolProp o fallback
+    try {
+      st2s = await calcularEstado(d.gas.coolprop, { P: d.in2.P, s: st1.s }, d.gas.iapws, d.gas);
+    } catch (e) {
+      console.warn('CoolProp falló en st2s, fallback a gas ideal:', e);
+      avisos.push('CoolProp falló en estado isoentrópico (' + d.gas.nombre + ' a P₂=' + n(P_fromSI(d.in2.P, d.sys)) + ' kPa, s=' + n(st1.s, 4) + '). Se usó gas ideal.');
+      const gamma = d.gas.Cp / d.gas.Cv;
+      const T2s_ideal = st1.T * Math.pow(d.in2.P / st1.P, (gamma - 1) / gamma);
+      st2s = estadoIdeal(d.in2.P, T2s_ideal, d.gas.R, d.gas.Cp, d.gas.Cv);
+      st2s.fase = 'Gas ideal (fallback)';
+    }
   }
 
   const eta = d.eta !== null ? d.eta / 100 : 0.8;
@@ -859,10 +925,18 @@ async function calcularCompresor(d) {
   let st2;
   if (d.modelo === 'ideal') {
     const T2 = st1.T + w_real / d.Cp;
-    if (T2 <= 0) throw new Error('T₂ ≤ 0 K. η o relación de compresión fuera de rango');
+    if (T2 <= 0) throw new Error('T₂ ≤ 0 K');
     st2 = estadoIdeal(d.in2.P, T2, d.R, d.Cp, d.Cv);
   } else {
-    st2 = await calcularEstado(d.gas.coolprop, { P: d.in2.P, h: h2 }, d.gas.iapws);
+    try {
+      st2 = await calcularEstado(d.gas.coolprop, { P: d.in2.P, h: h2 }, d.gas.iapws, d.gas);
+    } catch (e) {
+      console.warn('CoolProp falló en st2, fallback a gas ideal:', e);
+      avisos.push('CoolProp falló en estado 2 real (' + d.gas.nombre + ' a P₂=' + n(P_fromSI(d.in2.P, d.sys)) + ' kPa, h=' + n(h2, 4) + ' kJ/kg). Se usó gas ideal.');
+      const T2_ideal = st1.T + w_real / d.gas.Cp;
+      st2 = estadoIdeal(d.in2.P, T2_ideal, d.gas.R, d.gas.Cp, d.gas.Cv);
+      st2.fase = 'Gas ideal (fallback)';
+    }
   }
 
   let m = d.m1 !== null ? m_toSI(d.m1, d.sys) : (d.m2 !== null ? m_toSI(d.m2, d.sys) : null);
@@ -874,11 +948,11 @@ async function calcularCompresor(d) {
 
   return { st1, st2, st2s, w_iso, w_real, eta, m, W, sgen_esp, Sgen,
            gas: d.gas, sys: d.sys, modelo: d.modelo,
-           R: d.R, Cp: d.Cp, Cv: d.Cv, equipo: 'compresor' };
+           R: d.R, Cp: d.Cp, Cv: d.Cv, equipo: 'compresor', avisos };
 }
 
 /* ============================================================
-   RESOLVER TOBERA / DIFUSOR
+   RESOLVER TOBERA / DIFUSOR — con fallback por estado
    ============================================================ */
 async function resolverTobera(tipo) {
   const cont = document.getElementById('tp_resultados');
@@ -895,7 +969,8 @@ async function resolverTobera(tipo) {
     const elEta = document.getElementById('tp_eta');
     if (elEta && !elEta.value.trim()) elEta.value = fmt(ctx.eta*100, 5).replace('.', ',');
   } catch (e) {
-    mostrarError('tp', e.message);
+    cont.innerHTML = `<div class="tag-warn">✖ ${e.message}</div>
+      <div class="tag-nota" style="margin-top:6px;">ⓘ Revise que el modelo (<b>${document.getElementById('tp_model').value}</b>) esté disponible y que P₂ ≠ P₁. Si usa Gas Real, espere a que el banner muestre "✅ listo".</div>`;
     console.error(e);
   }
 }
@@ -906,6 +981,7 @@ async function calcularTobera(d) {
   if (Math.abs(d.in2.P - d.in1.P) < 1e-6) throw new Error('P₂ = P₁: no hay cambio de presión');
 
   const esDifusor = d.in2.P > d.in1.P;
+  const avisos = [];
 
   let st1, st2s;
   if (d.modelo === 'ideal') {
@@ -916,8 +992,24 @@ async function calcularTobera(d) {
     const T2s = st1.T * Math.pow(d.in2.P / st1.P, (gamma - 1) / gamma);
     st2s = estadoIdeal(d.in2.P, T2s, d.R, d.Cp, d.Cv);
   } else {
-    st1 = await calcularEstado(d.gas.coolprop, d.in1, d.gas.iapws);
-    st2s = await calcularEstado(d.gas.coolprop, { P: d.in2.P, s: st1.s }, d.gas.iapws);
+    try {
+      st1 = await calcularEstado(d.gas.coolprop, d.in1, d.gas.iapws, d.gas);
+    } catch (e) {
+      console.warn('CoolProp falló en st1 tobera, fallback:', e);
+      avisos.push('CoolProp falló en estado 1. Se usó gas ideal.');
+      st1 = estadoIdeal(d.in1.P, d.in1.T, d.gas.R, d.gas.Cp, d.gas.Cv);
+      st1.fase = 'Gas ideal (fallback)';
+    }
+    try {
+      st2s = await calcularEstado(d.gas.coolprop, { P: d.in2.P, s: st1.s }, d.gas.iapws, d.gas);
+    } catch (e) {
+      console.warn('CoolProp falló en st2s tobera, fallback:', e);
+      avisos.push('CoolProp falló en estado isoentrópico. Se usó gas ideal.');
+      const gamma = d.gas.Cp / d.gas.Cv;
+      const T2s_ideal = st1.T * Math.pow(d.in2.P / st1.P, (gamma - 1) / gamma);
+      st2s = estadoIdeal(d.in2.P, T2s_ideal, d.gas.R, d.gas.Cp, d.gas.Cv);
+      st2s.fase = 'Gas ideal (fallback)';
+    }
   }
 
   const eta = d.eta !== null ? d.eta / 100 : (esDifusor ? 0.85 : 0.9);
@@ -935,13 +1027,23 @@ async function calcularTobera(d) {
     h_salida_real = st1.h - w_real;
     T2_ideal = st1.T - eta * (st1.T - st2s.T);
   }
-  if (T2_ideal <= 0) throw new Error('T₂ ≤ 0 K (η o relación de presión fuera de rango)');
+  if (T2_ideal <= 0) throw new Error('T₂ ≤ 0 K');
 
   let st2;
   if (d.modelo === 'ideal') {
     st2 = estadoIdeal(d.in2.P, T2_ideal, d.R, d.Cp, d.Cv);
   } else {
-    st2 = await calcularEstado(d.gas.coolprop, { P: d.in2.P, h: h_salida_real }, d.gas.iapws);
+    try {
+      st2 = await calcularEstado(d.gas.coolprop, { P: d.in2.P, h: h_salida_real }, d.gas.iapws, d.gas);
+    } catch (e) {
+      console.warn('CoolProp falló en st2 tobera, fallback:', e);
+      avisos.push('CoolProp falló en estado 2 real. Se usó gas ideal.');
+      const T2_fb = esDifusor
+        ? st1.T + (w_real / d.gas.Cp)
+        : st1.T - eta * (st1.T - st2s.T);
+      st2 = estadoIdeal(d.in2.P, T2_fb, d.gas.R, d.gas.Cp, d.gas.Cv);
+      st2.fase = 'Gas ideal (fallback)';
+    }
   }
 
   const v1 = d.v1 !== null ? V_toSI(d.v1, d.sys) : 0;
@@ -959,17 +1061,24 @@ async function calcularTobera(d) {
     sgen_esp, Sgen, v1, v2,
     gas: d.gas, sys: d.sys, modelo: d.modelo,
     R: d.R, Cp: d.Cp, Cv: d.Cv,
-    equipo: esDifusor ? 'difusor' : 'tobera'
+    equipo: esDifusor ? 'difusor' : 'tobera',
+    avisos
   };
 }
 
 /* ============================================================
-   MOSTRAR RESULTADOS (con notación de sombrero)
+   MOSTRAR RESULTADOS
    ============================================================ */
 function mostrarResultadosCompresor(ctx, cont, tipo) {
-  const { st1, st2, st2s, w_iso, w_real, eta, m, W, sgen_esp, Sgen, gas, sys } = ctx;
+  const { st1, st2, st2s, w_iso, w_real, eta, m, W, sgen_esp, Sgen, gas, sys, modelo, avisos } = ctx;
   const uP = U[sys].P, uT = U[sys].T, uh = U[sys].h, us = U[sys].s, um = U[sys].m;
   let html = '';
+  html += `<span class="tag-info">Modelo: <b>${modelo === 'ideal' ? 'Gas Ideal (JS)' : 'Gas Real'}</b> — ${gas.nombre}</span>\n`;
+  if (avisos && avisos.length) {
+    avisos.forEach(av => { html += `<div class="tag-nota">⚠️ ${av}</div>\n`; });
+  }
+  html += '\n';
+
   if (tipo === 'todos' || tipo === 'masa') {
     html += `<span class="tag-h">═══ BALANCE DE MASA ═══</span>`;
     html += `Sistema: Compresor, abierto, estacionario, 1E/1S\n`;
@@ -986,7 +1095,7 @@ function mostrarResultadosCompresor(ctx, cont, tipo) {
     html += `  P₁ = ${n(P_fromSI(st1.P, sys))} ${uP}   T₁ = ${n(T_fromSI(st1.T, sys))} ${uT}   Fase: ${st1.fase}\n`;
     html += `  Ĥ₁ = ${n(h_fromSI(st1.h, sys))} ${uh}   Ŝ₁ = ${n(s_fromSI(st1.s, sys))} ${us}\n\n`;
     html += `<span class="tag-sub">②s Salida isoentrópica:</span>\n`;
-    html += `  P₂s = ${n(P_fromSI(st2s.P, sys))} ${uP}   T₂s = ${n(T_fromSI(st2s.T, sys))} ${uT}\n`;
+    html += `  P₂s = ${n(P_fromSI(st2s.P, sys))} ${uP}   T₂s = ${n(T_fromSI(st2s.T, sys))} ${uT}   Fase: ${st2s.fase}\n`;
     html += `  Ĥ₂s = ${n(h_fromSI(st2s.h, sys))} ${uh}\n`;
     html += `  Ẇ_iso = Ṁ(Ĥ₂s − Ĥ₁) = ${n(h_fromSI(w_iso, sys))} ${uh} por unidad de masa\n\n`;
     html += `<span class="tag-sub">② Salida real (η = ${n(eta*100, 4)} %):</span>\n`;
@@ -1011,14 +1120,19 @@ function mostrarResultadosCompresor(ctx, cont, tipo) {
 }
 
 function mostrarResultadosTobera(ctx, cont, tipo) {
-  const { st1, st2, st2s, w_iso, w_real, eta, m, sgen_esp, Sgen, v1, v2, gas, sys, equipo } = ctx;
+  const { st1, st2, st2s, w_iso, w_real, eta, m, sgen_esp, Sgen, v1, v2, gas, sys, equipo, modelo, avisos } = ctx;
   const uP = U[sys].P, uT = U[sys].T, uh = U[sys].h, us = U[sys].s, uV = U[sys].V, um = U[sys].m;
   const esDifusor = equipo === 'difusor';
   let html = '';
 
+  html += `<span class="tag-info">Modelo: <b>${modelo === 'ideal' ? 'Gas Ideal (JS)' : 'Gas Real'}</b> — ${gas.nombre}</span>\n`;
   html += esDifusor
-    ? `<span class="tag-info">ⓘ Detectado como DIFUSOR (P₂ > P₁): el fluido gana presión y se desacelera.</span>\n\n`
-    : `<span class="tag-info">ⓘ Detectado como TOBERA (P₂ < P₁): el fluido pierde presión y se acelera.</span>\n\n`;
+    ? `<span class="tag-info">ⓘ Detectado como DIFUSOR (P₂ > P₁): el fluido gana presión y se desacelera.</span>\n`
+    : `<span class="tag-info">ⓘ Detectado como TOBERA (P₂ < P₁): el fluido pierde presión y se acelera.</span>\n`;
+  if (avisos && avisos.length) {
+    avisos.forEach(av => { html += `<div class="tag-nota">⚠️ ${av}</div>\n`; });
+  }
+  html += '\n';
 
   if (tipo === 'todos' || tipo === 'masa') {
     html += `<span class="tag-h">═══ BALANCE DE MASA ═══</span>`;
@@ -1036,7 +1150,7 @@ function mostrarResultadosTobera(ctx, cont, tipo) {
     html += `  P₁ = ${n(P_fromSI(st1.P, sys))} ${uP}   T₁ = ${n(T_fromSI(st1.T, sys))} ${uT}   Fase: ${st1.fase}\n`;
     html += `  Ĥ₁ = ${n(h_fromSI(st1.h, sys))} ${uh}   V₁ = ${n(V_fromSI(v1, sys))} ${uV}\n\n`;
     html += `<span class="tag-sub">②s Salida isoentrópica:</span>\n`;
-    html += `  P₂s = ${n(P_fromSI(st2s.P, sys))} ${uP}   T₂s = ${n(T_fromSI(st2s.T, sys))} ${uT}\n`;
+    html += `  P₂s = ${n(P_fromSI(st2s.P, sys))} ${uP}   T₂s = ${n(T_fromSI(st2s.T, sys))} ${uT}   Fase: ${st2s.fase}\n`;
     html += `  Ĥ₂s = ${n(h_fromSI(st2s.h, sys))} ${uh}   |ΔĤ_iso| = ${n(h_fromSI(Math.abs(w_iso), sys))} ${uh}\n\n`;
     html += `<span class="tag-sub">② Salida real (η = ${n(eta*100, 4)} %):</span>\n`;
     html += `  P₂ = ${n(P_fromSI(st2.P, sys))} ${uP}   T₂ = ${n(T_fromSI(st2.T, sys))} ${uT}   Fase: ${st2.fase}\n`;
@@ -1082,7 +1196,7 @@ function mostrarContexto(pref, ctx) {
 }
 
 /* ============================================================
-   DIAGRAMAS (Canvas 2D) — ejes con sombrero
+   DIAGRAMAS
    ============================================================ */
 function _ajustarCanvas(cv) {
   if (!cv) return;
@@ -1320,7 +1434,7 @@ function descargarTodosDiagramas() {
 }
 
 /* ============================================================
-   EJEMPLOS
+   EJEMPLOS — cargan en GAS IDEAL por defecto
    ============================================================ */
 function cargarEjemploC(n) {
   const sys = getUnitSys();
@@ -1331,25 +1445,23 @@ function cargarEjemploC(n) {
   document.getElementById('cp2_fase').textContent = 'Fase: —';
   document.getElementById('cp_resultados').innerHTML = '<span style="color:#78909c;">Ejecute los balances para ver los resultados...</span>';
 
+  // ==== POR DEFECTO: GAS IDEAL ====
+  document.getElementById('cp_model').value = 'ideal';
+  document.getElementById('cp_ideal_opts').style.display = 'flex';
+
   if (sys === 'SI') {
     if (n === 1) {
       document.getElementById('cp_gas').value = 'Hydrogen';
-      document.getElementById('cp_model').value = 'ideal';
-      document.getElementById('cp_ideal_opts').style.display = 'flex';
       set('cp_cp', '14,3'); set('cp_cv', '10,2'); set('cp_R', '4,124');
       set('cp1_P', '100'); set('cp1_T', '25'); set('cp1_m', '0,5');
       set('cp2_P', '20000'); set('cp_eta', '75');
     } else if (n === 2) {
       document.getElementById('cp_gas').value = 'CO2';
-      document.getElementById('cp_model').value = 'ideal';
-      document.getElementById('cp_ideal_opts').style.display = 'flex';
       set('cp_cp', '0,84'); set('cp_cv', '0,627'); set('cp_R', '0,189');
       set('cp1_P', '100'); set('cp1_T', '30'); set('cp1_m', '0,5');
       set('cp2_P', '1000'); set('cp_eta', '75');
     } else {
       document.getElementById('cp_gas').value = 'Air';
-      document.getElementById('cp_model').value = 'ideal';
-      document.getElementById('cp_ideal_opts').style.display = 'flex';
       set('cp_cp', '1,005'); set('cp_cv', '0,718'); set('cp_R', '0,287');
       set('cp1_P', '100'); set('cp1_T', '20'); set('cp1_m', '0,5');
       set('cp2_P', '500'); set('cp_eta', '80');
@@ -1357,20 +1469,17 @@ function cargarEjemploC(n) {
   } else {
     if (n === 1) {
       document.getElementById('cp_gas').value = 'Hydrogen';
-      document.getElementById('cp_model').value = 'ideal';
-      document.getElementById('cp_ideal_opts').style.display = 'flex';
       set('cp_cp', '3,42'); set('cp_cv', '2,44'); set('cp_R', '0,985');
       set('cp1_P', '14,5'); set('cp1_T', '77'); set('cp1_m', '1,1');
       set('cp2_P', '2900'); set('cp_eta', '75');
     } else if (n === 2) {
       document.getElementById('cp_gas').value = 'CO2';
-      document.getElementById('cp_model').value = 'ideal';
-      document.getElementById('cp_ideal_opts').style.display = 'flex';
       set('cp_cp', '0,20'); set('cp_cv', '0,15'); set('cp_R', '0,045');
       set('cp1_P', '14,5'); set('cp1_T', '86'); set('cp1_m', '1,1');
       set('cp2_P', '145'); set('cp_eta', '75');
     } else {
       document.getElementById('cp_gas').value = 'Air';
+      set('cp_cp', '0,24'); set('cp_cv', '0,171'); set('cp_R', '0,069');
       set('cp1_P', '14,5'); set('cp1_T', '68'); set('cp1_m', '1,1');
       set('cp2_P', '72,5'); set('cp_eta', '80');
     }
@@ -1388,31 +1497,28 @@ function cargarEjemploT(n) {
   document.getElementById('tp2_fase').textContent = 'Fase: —';
   document.getElementById('tp_resultados').innerHTML = '<span style="color:#78909c;">Ejecute los balances para ver los resultados...</span>';
 
+  // ==== POR DEFECTO: GAS IDEAL ====
+  document.getElementById('tp_model').value = 'ideal';
+  document.getElementById('tp_ideal_opts').style.display = 'flex';
+
   if (sys === 'SI') {
     if (n === 1) {
       document.getElementById('tp_gas').value = 'Water';
-      document.getElementById('tp_model').value = 'real';
-      document.getElementById('tp_ideal_opts').style.display = 'none';
+      set('tp_cp', '2,08'); set('tp_cv', '1,619'); set('tp_R', '0,4615');
       set('tp1_P', '2756,3'); set('tp1_T', '316'); set('tp1_m', '0,3778'); set('tp1_v', '0');
       set('tp2_P', '1795'); set('tp_eta', '95');
     } else if (n === 2) {
       document.getElementById('tp_gas').value = 'CO2';
-      document.getElementById('tp_model').value = 'ideal';
-      document.getElementById('tp_ideal_opts').style.display = 'flex';
       set('tp_cp', '0,846'); set('tp_cv', '0,657'); set('tp_R', '0,189');
       set('tp1_P', '5000'); set('tp1_T', '60'); set('tp1_v', '10'); set('tp1_m', '2');
       set('tp2_P', '1000'); set('tp_eta', '88');
     } else if (n === 3) {
       document.getElementById('tp_gas').value = 'Air';
-      document.getElementById('tp_model').value = 'ideal';
-      document.getElementById('tp_ideal_opts').style.display = 'flex';
       set('tp_cp', '1,005'); set('tp_cv', '0,718'); set('tp_R', '0,287');
       set('tp1_P', '500'); set('tp1_T', '100'); set('tp1_v', '20'); set('tp1_m', '1');
       set('tp2_P', '100'); set('tp_eta', '90');
     } else {
       document.getElementById('tp_gas').value = 'Air';
-      document.getElementById('tp_model').value = 'ideal';
-      document.getElementById('tp_ideal_opts').style.display = 'flex';
       set('tp_cp', '1,005'); set('tp_cv', '0,718'); set('tp_R', '0,287');
       set('tp1_P', '70'); set('tp1_T', '57'); set('tp1_v', '200'); set('tp1_m', '1');
       set('tp2_P', '100'); set('tp_eta', '90');
@@ -1420,28 +1526,21 @@ function cargarEjemploT(n) {
   } else {
     if (n === 1) {
       document.getElementById('tp_gas').value = 'Water';
-      document.getElementById('tp_model').value = 'real';
-      document.getElementById('tp_ideal_opts').style.display = 'none';
+      set('tp_cp', '0,50'); set('tp_cv', '0,39'); set('tp_R', '0,110');
       set('tp1_P', '399,7'); set('tp1_T', '600,8'); set('tp1_m', '0,833'); set('tp1_v', '0');
       set('tp2_P', '260,3'); set('tp_eta', '95');
     } else if (n === 2) {
       document.getElementById('tp_gas').value = 'CO2';
-      document.getElementById('tp_model').value = 'ideal';
-      document.getElementById('tp_ideal_opts').style.display = 'flex';
       set('tp_cp', '0,20'); set('tp_cv', '0,16'); set('tp_R', '0,045');
       set('tp1_P', '725'); set('tp1_T', '140'); set('tp1_v', '33'); set('tp1_m', '4,4');
       set('tp2_P', '145'); set('tp_eta', '88');
     } else if (n === 3) {
       document.getElementById('tp_gas').value = 'Air';
-      document.getElementById('tp_model').value = 'ideal';
-      document.getElementById('tp_ideal_opts').style.display = 'flex';
       set('tp_cp', '0,24'); set('tp_cv', '0,171'); set('tp_R', '0,069');
       set('tp1_P', '72,5'); set('tp1_T', '212'); set('tp1_v', '66'); set('tp1_m', '2,2');
       set('tp2_P', '14,5'); set('tp_eta', '90');
     } else {
       document.getElementById('tp_gas').value = 'Air';
-      document.getElementById('tp_model').value = 'ideal';
-      document.getElementById('tp_ideal_opts').style.display = 'flex';
       set('tp_cp', '0,24'); set('tp_cv', '0,171'); set('tp_R', '0,069');
       set('tp1_P', '10,2'); set('tp1_T', '134,6'); set('tp1_v', '656'); set('tp1_m', '2,2');
       set('tp2_P', '14,5'); set('tp_eta', '90');
